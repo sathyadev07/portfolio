@@ -44,26 +44,26 @@
   /* Real project media from the author's portfolio, matched to its destination. */
   const GALLERIES = {
     fsae: [
-      ['upright-wheel-cad-01.jpg', '2027 rear wheel upright CAD model in Siemens NX.'],
-      ['upright-fea.jpg', 'Static structural FEA result for the rear upright and hub group.'],
-      ['upright-cam-01-roughing.jpg', 'CAM roughing setup for the upright.'],
+      ['upright-wheel-cad-01.jpg', '2027 rear wheel drivetrain assembly'],
+      ['upright-fea.jpg', 'Static structural FEA deformation result for rear upright and hub group'],
+      ['upright-cam-01-roughing.jpg', 'CAM roughing setup for upright.'],
       ['upright-5axis-machined.jpg', 'Upright after 5-axis machining.']
     ],
     'proj-01': [
-      ['bike-01-frame-assembly.jpg', 'Parametric electric bike frame assembly.'],
-      ['bike-02-fea-prepped.jpg', 'Frame model prepared for FEA.'],
-      ['bike-03-fea-stress.jpg', 'Stress distribution across the frame under static load.']
+      ['bike-01-frame-assembly.jpg', 'Parametric electric bike frame assembly'],
+      ['bike-02-fea-prepped.jpg', 'Frame model prepared for FEA'],
+      ['bike-03-fea-stress.jpg', 'Stress distribution across the frame under static load']
     ],
     'proj-03': [
-      ['topo-01-source.jpg', 'Source portrait used to drive the relief.'],
-      ['topo-02-heightmap.jpg', 'Grayscale heightmap derived from the source image.'],
-      ['topo-03-mesh-toolpath.jpg', 'Relief mesh with generated CAM toolpaths.'],
-      ['topo-05-stockprep.jpg', 'Stock preparation before machining.'],
-      ['topo-06-router.jpg', 'Machining the relief on the router.'],
-      ['topo-07-final.jpg', 'Finished machined relief.']
+      ['topo-01-source.jpg', 'Source portrait'],
+      ['topo-02-heightmap.jpg', 'Grayscale heightmap derived from source image'],
+      ['topo-03-mesh-toolpath.jpg', 'Mesh with generated CAM toolpaths'],
+      ['topo-05-stockprep.jpg', 'Stock preparation before machining'],
+      ['topo-06-router.jpg', 'Machining the relief on router gantry'],
+      ['topo-07-final.jpg', 'Finished machined relief']
     ],
     'proj-04': [
-      ['audio-eq-schematic.png', 'Multi-stage analog equalizer schematic.']
+      ['audio-eq-schematic.png', 'Multi-stage analog equalizer schematic']
     ]
   };
 
@@ -77,9 +77,9 @@
   const VIDEO_H = 540;
   const VIDEOS = {
     'proj-03': [
-      { stem: 'topo-video-1', caption: '01 — Machining Pass — Video 1' },
-      { stem: 'topo-video-2', caption: '02 — Machining Pass — Video 2' },
-      { stem: 'topo-video-3', caption: '03 — Machining Pass — Video 3' }
+      { stem: 'topo-video-1', caption: 'Machining Pass 01' },
+      { stem: 'topo-video-2', caption: 'Machining Pass 02' },
+      { stem: 'topo-video-3', caption: 'Machining Pass 03' }
     ]
   };
 

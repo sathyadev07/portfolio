@@ -79,7 +79,7 @@ window.EXPERIENCES_DATA = [
       },
       {
         id: 'fea-sim',
-        title: '[Simulation: Rear Upright & Hub Static Structural FEA Stress Distribution]',
+        title: '[Simulation: Rear Upright & Hub Static Structural FEA Deformation]',
         type: 'fea-stress'
       }
     ]
@@ -92,7 +92,7 @@ window.PROJECTS_DATA = [
     projNumber: 'PROJ-01',
     title: 'Custom Electric Bike Design',
     period: 'Oct 2025 — Present',
-    subtitle: 'Parametric Chassis & FEA',
+    subtitle: 'Parametric Frame & FEA',
     summary: 'Fully parametric frame assembly in Siemens NX tied to off-the-shelf tubing catalogs. Automated geometric updates for wheelbase, head angle, and chainstay dropouts.',
     bullets: [
       'Built a fully parametric frame assembly in Siemens NX keyed to off-the-shelf tubing dimensions, so wheelbase, head angle, chainstay angle, and dropout geometry all update from a single set of driving inputs.',
@@ -133,7 +133,7 @@ window.PROJECTS_DATA = [
     projNumber: 'PROJ-03',
     title: 'Complex Surface Topography',
     period: 'Dec 2025 — Jan 2026',
-    subtitle: '5-Axis CAM Optimization',
+    subtitle: '3-Axis CAM Optimization',
     summary: 'Generated 3D organic relief mesh in Fusion 360 directly from 2D grayscale gradient heightmaps, optimizing toolpath continuity for automated CNC milling.',
     bullets: [
       'Produced a 2D grayscale gradient heightmap from a source portrait photo.',
@@ -173,7 +173,7 @@ window.PROJECTS_DATA = [
     projNumber: 'PROJ-05',
     title: 'Mars Rover Drivetrain & Control',
     period: 'Oct 2025 — Dec 2025',
-    subtitle: 'Planetary Robotics',
+    subtitle: 'Robotics & Control',
     summary: 'Compact high-torque rover drivetrain engineered with a custom non-backdrivable worm-gear cargo system capable of carrying 500 g payloads up 35° incline grades.',
     bullets: [
       'Built a compact drivetrain with a custom worm-gear cargo system to carry 500 g loads up 35° inclines.',
@@ -195,7 +195,7 @@ window.PROJECTS_DATA = [
     projNumber: 'PROJ-06',
     title: 'Smog Tower Feasibility & Simulation',
     period: 'Mar 2025',
-    subtitle: 'Atmospheric Aerodynamics',
+    subtitle: 'Environmental Fluid Dynamics',
     summary: 'Evaluated large-scale environmental air cleaning towers for PM2.5/PM10 mitigation in Hong Kong under urban budgetary, airflow, and energetic constraints.',
     bullets: [
       'Researched Studio Roosegaarde\'s Smog Free Tower concept and evaluated its feasibility for large-scale deployment to reduce PM2.5/PM10 air pollution in Hong Kong within realistic budget and practicality constraints.',

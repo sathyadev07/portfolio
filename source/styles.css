@@ -1155,24 +1155,246 @@ html.sheet-open { overflow: hidden; }
   .mode-odyssey .panel, .mode-odyssey .panel-hero { width: min(72vw, 680px); }
 }
 
+/* ---------- the printed portfolio ----------
+
+   The site is a scroll-driven scene; paper has pages instead of a camera, so
+   print gets its own document — #portfolio-print, assembled in odyssey.js —
+   and its own type system rather than a shrunken screenshot of the screen
+   layout. The whole point of the block below is that a visitor who chooses
+   Save as PDF ends up with a portfolio: one family, one body size, one heading
+   size, one spacing step, the same on every destination, and no destination
+   allowed to run past two pages.
+
+   Nothing here uses a flex or grid container that has to fragment. Column flex
+   is still the box browsers break worst across pages, so the vertical rhythm
+   is carried by margins and the only grids left — figure rows, stats, facts —
+   are small enough to declare break-inside: avoid and mean it. */
 @media print {
-  @page { margin: 16mm; }
+  /* 14mm leaves 182 x 269mm live on A4 and 188 x 251mm on Letter. Every height
+     budgeted below is measured against the Letter figure, the tighter of the
+     two, so the page counts hold on either stock. */
+  @page { margin: 14mm; }
   html, body { background: white !important; color: black !important; overflow: visible !important; }
   body > *:not(#portfolio-print) { display: none !important; }
-  #portfolio-print { display: block; font-size: 11pt; }
-  #portfolio-print .panel { display: block !important; position: static !important; width: auto !important; max-height: none !important; overflow: visible !important; transform: none !important; opacity: 1 !important; filter: none !important; margin: 0 0 24pt; break-before: page; }
+
+  /* The shared style, declared once and consumed by every rule under it. The
+     screen's 24pt/20pt headings were sized for a card floating in a galaxy;
+     on paper they only pushed the write-up onto a second sheet. */
+  #portfolio-print {
+    --print-body: 10.5pt;
+    --print-heading: 15pt;
+    --print-sub: 11pt;
+    --print-small: 8.5pt;
+    --print-gap: 5mm;
+    --print-tight: 3mm;
+    --print-rule: #c8c8c8;
+    display: block;
+    font-family: var(--font-body);
+    font-size: var(--print-body);
+    line-height: 1.38;
+    orphans: 2;
+    widows: 2;
+  }
+  /* Ink, not atmosphere. The amber accent, the glass panels, the glows and the
+     display face (which only covers A-Z, so it falls back mid-word on paper)
+     all resolve to one black-on-white voice, and the hairlines that survive
+     are given a colour that actually prints — var(--line) is white at 14%,
+     which is nothing at all on a white sheet. */
+  #portfolio-print * {
+    color: black !important;
+    font-family: var(--font-body) !important;
+    background: none !important;
+    border-color: var(--print-rule) !important;
+    text-shadow: none !important;
+    box-shadow: none !important;
+    filter: none !important;
+    -webkit-backdrop-filter: none !important;
+    backdrop-filter: none !important;
+  }
+  #portfolio-print .display { letter-spacing: 0.04em; }
+
+  /* --- destinations and pagination --- */
+
+  #portfolio-print .panel {
+    display: block !important;
+    position: static !important;
+    width: auto !important;
+    max-width: none !important;
+    max-height: none !important;
+    overflow: visible !important;
+    transform: none !important;
+    opacity: 1 !important;
+    margin: 0;
+    break-before: page;
+  }
   #portfolio-print .panel:first-child { break-before: auto; }
-  #portfolio-print .panel-inner { padding: 0; border: 0; background: none; backdrop-filter: none; }
-  #portfolio-print * { color: black !important; text-shadow: none !important; box-shadow: none !important; }
-  #portfolio-print .display { font-family: var(--font-body); letter-spacing: 0; }
-  #portfolio-print h1 { font-size: 24pt; }
-  #portfolio-print h2 { font-size: 20pt; }
-  #portfolio-print h3 { margin: 12pt 0 6pt; }
+  #portfolio-print .print-cover { display: block; break-inside: avoid; }
+  #portfolio-print .print-continuation { break-before: page; }
+  /* Hero and About are the cover sheet. Neither is long enough to earn a page
+     of its own — together they run around half a sheet — and starting About on
+     page two would spend a whole page on a name and five facts. So the page
+     break is attached to the destination kind rather than fired blindly at
+     every .panel, and the pair is kept whole. If the two ever do outgrow one
+     page, About is the half that matters and break-inside keeps it intact. */
+  #portfolio-print .panel-hero,
+  #portfolio-print .panel-about { break-before: auto; break-inside: avoid; }
+  #portfolio-print .panel-hero { break-after: avoid; }
+  #portfolio-print .panel-about { margin-top: 8mm; }
+  #portfolio-print .panel-inner { display: block; padding: 0; border: 0; }
+
+  /* One rhythm for every block on every destination. Experience and project
+     panels carry their detail parts directly; hero, about and contact keep a
+     .panel-inner, so both levels get the same step. */
+  #portfolio-print .panel > *,
+  #portfolio-print .panel-inner > * { margin: 0 0 var(--print-gap); }
+  #portfolio-print .panel > *:last-child,
+  #portfolio-print .panel-inner > *:last-child { margin-bottom: 0; }
+
+  /* --- type --- */
+
+  #portfolio-print h1,
+  #portfolio-print h2 { font-size: var(--print-heading); line-height: 1.2; break-after: avoid; }
+  #portfolio-print h3 {
+    font-size: var(--print-sub);
+    line-height: 1.25;
+    font-weight: 600;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    break-after: avoid;
+  }
+  #portfolio-print .panel-inner > h1,
+  #portfolio-print .panel-inner > h2 { margin: 0 0 var(--print-tight); }
+  /* A subhead sits closer to what it introduces than to what precedes it. */
+  #portfolio-print .panel > h3 { margin: 2mm 0 var(--print-tight); }
+  #portfolio-print .eyebrow,
+  #portfolio-print .meta,
+  #portfolio-print .status,
+  #portfolio-print .facts { font-size: var(--print-small); }
+  #portfolio-print .eyebrow { letter-spacing: 0.1em; margin-bottom: 1.5mm; }
+  /* Screen measures (62ch / 68ch) exist to stop a card spanning a wide
+     viewport; the printed column is already only 182mm and holding the text
+     back from it would just add white space. */
+  #portfolio-print .lead,
+  #portfolio-print .body { font-size: var(--print-body); max-width: none; }
+
+  #portfolio-print .detail-head { break-inside: avoid; margin-bottom: var(--print-tight); }
+  #portfolio-print .detail-head .logo-mark { width: 14mm; margin-bottom: 2.5mm; }
+  #portfolio-print .detail-headings { display: grid; gap: 1.5mm; }
+  #portfolio-print .detail-number { font-size: var(--print-small); letter-spacing: 0.1em; }
+
+  #portfolio-print .bullets { display: block; }
+  #portfolio-print .bullets li { padding-left: 5mm; margin-bottom: var(--print-tight); break-inside: avoid; }
+  #portfolio-print .bullets li:last-child { margin-bottom: 0; }
+  /* The marker is a background, and background graphics are the first thing a
+     print dialog switches off — this is the one place in the document that
+     genuinely needs its ink, so it asks for it. */
+  #portfolio-print .bullets li::before {
+    left: 0;
+    top: 1.8mm;
+    width: 1.2mm;
+    height: 1.2mm;
+    background: black;
+    -webkit-print-color-adjust: exact;
+    print-color-adjust: exact;
+  }
+
+  #portfolio-print .tags { gap: 2mm; break-inside: avoid; }
+  #portfolio-print .tag { padding: 0.8mm 2.4mm; font-size: var(--print-small); }
+
+  #portfolio-print .stats {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(36mm, 1fr));
+    gap: 4mm;
+    break-inside: avoid;
+  }
+  #portfolio-print .stat { display: block; }
+  #portfolio-print .stat-value { display: block; font-size: var(--print-sub); font-weight: 600; }
+  #portfolio-print .stat-label { display: block; font-size: var(--print-small); }
+
+  #portfolio-print .note { padding: 3mm; border: 1px solid var(--print-rule); border-radius: 0; break-inside: avoid; }
+  #portfolio-print .note-title { font-size: var(--print-small); letter-spacing: 0.08em; margin-bottom: 1.5mm; }
+  #portfolio-print .note-lines li { font-size: var(--print-body); }
+
+  /* --- figures --- */
+
+  /* .print-row is built in odyssey.js and is the only unit the fragmenter is
+     shown, so a page ends up with two images, three, or none — never one
+     stranded figure that reads as an accident. The caps are what keep a photo
+     from eating a page the write-up needs. The print builder assigns each
+     image a width from its measured aspect ratio and the shared 64mm height
+     budget, with extra room for the single schematic. Natural height keeps
+     every frame intact; no fixed-height image box distorts its ratio. */
   #portfolio-print .gallery { display: block; }
-  #portfolio-print .shot { break-inside: avoid; margin: 12pt 0; }
-  #portfolio-print .shot img { width: auto; max-width: 100%; max-height: 180mm; height: auto; object-fit: contain; }
-  #portfolio-print .stats, #portfolio-print .detail-head { margin: 12pt 0; break-inside: avoid; }
-  #portfolio-print .viewer-block, #portfolio-print .viewer-host, #portfolio-print .card-open { display: none; }
-  #portfolio-print .pill { border-radius: 0; padding: 8pt 0; border: 0; }
-  #portfolio-print .bullets li::before { background: black; }
+  #portfolio-print .print-row {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+    gap: 5mm 6mm;
+    margin: 0 0 var(--print-gap);
+    break-inside: avoid;
+  }
+  #portfolio-print .print-row:last-child { margin-bottom: 0; }
+  #portfolio-print .print-row.is-trio { grid-template-columns: repeat(3, minmax(0, 1fr)); }
+  /* proj-04 ships one schematic and has nothing to pair it with. It gets a
+     wider column rather than a partner, so the stage labels stay readable. */
+  #portfolio-print .print-row.is-solo { grid-template-columns: minmax(0, 118mm); }
+  #portfolio-print .shot { display: block; margin: 0; break-inside: avoid; }
+  #portfolio-print .shot img {
+    display: block;
+    width: min(100%, var(--print-image-width, 100%));
+    height: auto;
+    max-height: none;
+    object-fit: contain;
+    border: 1px solid var(--print-rule);
+    border-radius: 0;
+  }
+  #portfolio-print .shot figcaption { margin-top: 1.5mm; font-size: var(--print-small); line-height: 1.3; }
+
+  /* --- contact --- */
+
+  #portfolio-print .contact-actions { display: block; }
+  #portfolio-print .pill {
+    display: grid;
+    grid-template-columns: 34mm 1fr;
+    gap: 1.5mm 4mm;
+    width: auto;
+    padding: 0;
+    margin: 0 0 2mm;
+    border: 0;
+    border-radius: 0;
+  }
+  #portfolio-print .pill-label { font-size: var(--print-small); }
+  #portfolio-print .pill-value { font-size: var(--print-body); }
+  #portfolio-print .facts {
+    display: grid;
+    grid-template-columns: 34mm 1fr;
+    gap: 1.5mm 4mm;
+    padding-top: var(--print-tight);
+    border-top: 1px solid var(--print-rule);
+    break-inside: avoid;
+  }
+  /* Right-aligned values worked against a 600px card; across 182mm they leave
+     a canyon between the label and its answer. */
+  #portfolio-print .facts dd { text-align: left; }
+
+  /* Belt and braces. preparePrint() already drops every one of these before
+     they reach the print tree — a CAD canvas and a video element have no
+     honest still, and a placeholder frame would only spend page height saying
+     so — but nothing interactive gets to print an empty box if a future block
+     slips past the JS. */
+  #portfolio-print .viewer-block,
+  #portfolio-print .viewer-host,
+  #portfolio-print .viewer-controls,
+  #portfolio-print .card-open,
+  #portfolio-print .video-strip,
+  #portfolio-print .video-item,
+  #portfolio-print .video-frame,
+  #portfolio-print .video-preview,
+  #portfolio-print .video-play,
+  #portfolio-print .video-cap,
+  #portfolio-print video,
+  #portfolio-print canvas,
+  #portfolio-print button,
+  #portfolio-print .actions,
+  #portfolio-print .hint,
+  #portfolio-print .status-dot { display: none !important; }
 }

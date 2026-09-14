@@ -3,13 +3,10 @@
    The supplied GLB is the only galaxy representation. Waypoint beacons and
    local interaction motifs remain separate from the asset.
 
-   The camera is no longer a drone easing along a spline. Each leg between two
-   destinations is flown: the ship turns away from where it has been, builds
-   velocity, cruises along a path that bows with the galaxy's curvature, then
-   sights the destination and decelerates into its framing. Position comes from
-   an integrated velocity profile, so acceleration and deceleration are real
-   rather than implied by easing, and orientation is damped so the view never
-   snaps. Every timing and density figure is read from window.MOTION. */
+   Translation follows direct station-to-station legs and the established
+   integrated velocity profile. Orientation follows cached headings with a
+   viewport-margin correction and a bounded angular velocity. Scrolling in
+   reverse retraces the same route. Timing and density come from window.MOTION. */
 (function () {
   'use strict';
 
@@ -110,11 +107,11 @@
     let stopped = false;
     let frame = 0;
     let last = 0;
-    let time = 0;
     let progress = 0;
     let targetProgress = 0;
     let dirty = true;
     let slowTime = 0;
+    let beaconProgress = -1;
     const readout = { progress: 0, index: 0, speed: 0, starX: 0, starY: 0, visible: false };
 
     /* Tier drives density and resolution; the flight itself is identical on
@@ -234,16 +231,11 @@
       return g;
     });
 
-    /* ---------- flight geometry ----------
-
-       One leg per waypoint pair. The path is a quadratic Bezier whose control
-       point is the chord midpoint pushed laterally away from the galaxy centre:
-       that bows the route along the disc's curvature instead of cutting a
-       straight chord through it, without ever becoming an orbit. */
+    /* Direct legs and station framings are cached once. Their world-space
+       endpoints stay intact; orientation no longer requires a retreat arc. */
 
     const stations = waypoints.map(function (w) { return new T.Vector3(w.cameraPosition[0], w.cameraPosition[1], w.cameraPosition[2]); });
     const framings = waypoints.map(function (w) { return new T.Vector3(w.cameraTarget[0], w.cameraTarget[1], w.cameraTarget[2]); });
-    const stars = waypoints.map(function (w) { return new T.Vector3(w.position[0], w.position[1], w.position[2]); });
 
     /* Each panel has a fixed physical size and anchor just ahead of its arrival
        camera station. At a multi-unit distance it projects to only a few pixels.
@@ -276,38 +268,29 @@
       out.visible = Number.isFinite(out.scale) && Number.isFinite(out.x) && Number.isFinite(out.y);
     }
 
+    const stationOrientations = stationFrames.map(function (matrix) {
+      return new T.Quaternion().setFromRotationMatrix(matrix);
+    });
     const legs = [];
     for (let i = 0; i < stations.length - 1; i++) {
       const a = stations[i];
       const b = stations[i + 1];
       const chord = b.clone().sub(a);
-      const mid = a.clone().add(b).multiplyScalar(0.5);
-      /* Radial direction from the galaxy centre, which sits at the origin. */
-      const radial = mid.clone();
-      if (radial.lengthSq() < 1e-6) radial.set(0, 1, 0);
-      radial.normalize();
-      /* Remove the component along the chord so the bow is purely lateral and
-         never lengthens or shortens the route. */
-      const along = chord.clone().normalize();
-      radial.addScaledVector(along, -radial.dot(along));
-      if (radial.lengthSq() < 1e-6) radial.set(0, 1, 0);
-      radial.normalize();
-      const control = mid.clone().addScaledVector(radial, chord.length() * FLIGHT.arcBias);
       const length = Math.max(chord.length(), 1e-3);
-      const away = framings[i].clone().sub(a).normalize();
-      const arrival = framings[i + 1].clone().sub(b).normalize();
-      const c1 = a.clone().addScaledVector(away, -length * 0.26).addScaledVector(radial, length * 0.10);
-      const c2 = b.clone().addScaledVector(arrival, -length * 0.34).addScaledVector(radial, length * 0.10);
-      legs.push({ a: a, b: b, c1: c1, c2: c2, control: control, length: length });
+      const heading = new T.Quaternion().setFromRotationMatrix(
+        new T.Matrix4().lookAt(a, b, new T.Vector3(0, 1, 0)));
+      legs.push({ a: a, b: b, direction: chord.divideScalar(length), heading: heading });
     }
 
     const pos = new T.Vector3();
     const tangent = new T.Vector3(0, 0, -1);
-    const scratch = new T.Vector3();
-    const desiredLook = new T.Vector3().copy(framings[0]);
-    const smoothedLook = new T.Vector3().copy(framings[0]);
-    const orientationMatrix = new T.Matrix4();
     const desiredOrientation = new T.Quaternion();
+    const inverseOrientation = new T.Quaternion();
+    const visibilityCorrection = new T.Quaternion();
+    const localBearing = new T.Vector3();
+    const safeBearing = new T.Vector3();
+    const STEERING = Object.freeze({ radiansPerSecond: Math.PI / 4, response: 5.5 / MOTION.UPGRADE.turnDuration,
+      departureEnd: 0.28, arrivalStart: 0.50, desktopMargin: 0.80, portraitMargin: 0.70 });
     let orientationReady = false;
     const upVector = new T.Vector3(0, 1, 0);
     const rightVector = new T.Vector3();
@@ -315,23 +298,9 @@
     const parallaxTarget = new T.Vector2(0, 0);
     const projected = new T.Vector3();
 
-    /* Cubic flight: leave the old plane behind, bow through space, approach the
-       next station from behind its reading plane. Both endpoints remain fixed. */
-    function pathAt(leg, s, out) {
-      const u = 1 - s;
-      return out.set(0, 0, 0)
-        .addScaledVector(leg.a, u * u * u)
-        .addScaledVector(leg.c1, 3 * u * u * s)
-        .addScaledVector(leg.c2, 3 * u * s * s)
-        .addScaledVector(leg.b, s * s * s);
-    }
-    function pathTangent(leg, s, out) {
-      const u = 1 - s;
-      return out.set(0, 0, 0)
-        .addScaledVector(leg.a, -3 * u * u)
-        .addScaledVector(leg.c1, 3 * u * u - 6 * u * s)
-        .addScaledVector(leg.c2, 6 * u * s - 3 * s * s)
-        .addScaledVector(leg.b, 3 * s * s);
+    function smooth(value) {
+      const t = Math.max(0, Math.min(1, value));
+      return t * t * (3 - 2 * t);
     }
 
     let flightSpeed = 0;   /* 0 at a station, ~1 at cruise */
@@ -343,64 +312,32 @@
       const fraction = p - index;
       const PHASE = MOTION.chapter(index).phase;
       const leg = legs[Math.min(index, legs.length - 1)];
+      const u = Math.max(0, Math.min(1, (fraction - PHASE.holdEnd) / (PHASE.flightEnd - PHASE.holdEnd)));
+      const openingFov = waypoints[0] && waypoints[0].openingFov;
+      const nextFov = openingFov && index === 0 ? openingFov + (45 - openingFov) * u : 45;
+      if (camera.fov !== nextFov) { camera.fov = nextFov; camera.updateProjectionMatrix(); }
 
       if (fraction <= PHASE.holdEnd || !leg || index >= legs.length) {
         /* Arrived. The frustum is pinned and the destination framed: this is
            the readable dwell, and the only time the ship is still. */
         pos.copy(stations[index]);
-        desiredLook.copy(framings[index]);
+        desiredOrientation.copy(stationOrientations[index]);
         flightSpeed = 0;
-        tangent.copy(desiredLook).sub(pos);
-        if (tangent.lengthSq() < 1e-6) tangent.set(0, 0, -1);
-        tangent.normalize();
+        tangent.set(0, 0, -1).applyQuaternion(desiredOrientation);
       } else {
-        const u = Math.min(1,(fraction - PHASE.holdEnd) / (PHASE.flightEnd - PHASE.holdEnd));
         const s = profile.arc(u);
-        pathAt(leg, s, pos);
-        pathTangent(leg, s, tangent);
-        if (tangent.lengthSq() < 1e-6) tangent.set(0, 0, -1);
-        tangent.normalize();
+        pos.copy(leg.a).lerp(leg.b, s);
+        tangent.copy(leg.direction);
         flightSpeed = profile.speed(u);
-
-        /* Where the pilot is looking. Orientation ramps from the departing
-           framing to straight down the velocity vector, then hands over to the
-           arrival framing — so the old destination slides away behind and the
-           new one grows ahead, instead of the camera panning sideways. */
-        const turnSpan = Math.max(FLIGHT.turnSpan, 0.001);
-        const turnAway = Math.min(1, u / turnSpan);
-        const sightSpan = Math.max(FLIGHT.approach + FLIGHT.decelerate, 0.001);
-        const sightIn = Math.min(1, Math.max(0, (u - (1 - sightSpan)) / sightSpan));
-        const forward = FLIGHT.forwardLook * 0.25
-          * (turnAway * turnAway * (3 - 2 * turnAway))
-          * (1 - sightIn * sightIn * (3 - 2 * sightIn));
-
-        /* Forward gaze point, most of a leg-length ahead along the tangent. */
-        scratch.copy(pos).addScaledVector(tangent, leg.length * 0.9);
-        /* Destination gaze point: the arriving framing, biased toward the star
-           itself early on so it reads as a point of light being approached. */
-        const gazeBlend = Math.min(1, u / Math.min(0.35, FLIGHT.turnSpan));
-        desiredLook.copy(framings[index]).lerp(destinationAnchors[index + 1], gazeBlend * gazeBlend * (3 - 2 * gazeBlend));
-        const settleGaze = Math.max(0, Math.min(1, (s - 0.85) / 0.15));
-        desiredLook.lerp(framings[index + 1], settleGaze * settleGaze * (3 - 2 * settleGaze));
+        /* A reversible orientation schedule: one departure adjustment, a
+           fixed transit heading, and an early handoff to the arrival frame.
+           Reversing scroll retraces this schedule without flipping heading. */
+        desiredOrientation.copy(stationOrientations[index]).slerp(leg.heading, smooth(u / STEERING.departureEnd));
+        desiredOrientation.slerp(stationOrientations[index + 1], smooth((u - STEERING.arrivalStart) / (1 - STEERING.arrivalStart)));
       }
-
-      /* Damped orientation. The look point is filtered rather than assigned, so
-         no scroll jump can produce an instantaneous change of heading. */
-      smoothedLook.copy(desiredLook);
-
-      /* Bank into the curve, proportional to lateral acceleration. A ship
-         rolls; a drone does not. */
       rightVector.copy(tangent).cross(upVector);
-      let roll = 0;
-      if (leg && flightSpeed > 0.001 && rightVector.lengthSq() > 1e-6) {
-        rightVector.normalize();
-        /* Constant second derivative of a quadratic Bezier. */
-        scratch.copy(leg.a).addScaledVector(leg.control, -2).add(leg.b).multiplyScalar(2);
-        roll = Math.max(-0.16, Math.min(0.16, -scratch.dot(rightVector) / leg.length * flightSpeed * 2.4));
-      } else {
-        rightVector.set(1, 0, 0);
-      }
-      camera.up.set(0, 1, 0).applyAxisAngle(tangent, roll);
+      if (rightVector.lengthSq() > 1e-6) rightVector.normalize();
+      else rightVector.set(1, 0, 0);
 
       /* Pointer parallax: a small damped offset perpendicular to travel, so the
          viewer can lean without the camera becoming a free-flying drone. */
@@ -413,28 +350,46 @@
       }
 
       camera.position.copy(pos);
-      orientationMatrix.lookAt(camera.position,desiredLook,camera.up);
-      desiredOrientation.setFromRotationMatrix(orientationMatrix);
-      if(!orientationReady||calm){camera.quaternion.copy(desiredOrientation);orientationReady=true;}
-      else camera.quaternion.slerp(desiredOrientation,1-Math.exp(-delta*(5.5/MOTION.UPGRADE.turnDuration)));
-      /* Original 75° lens for the opening hold; the established 45° route
-         lens returns progressively once the visitor begins the first flight. */
-      const openingFov = waypoints[0] && waypoints[0].openingFov;
-      const departure = index === 0 ? Math.max(0, Math.min(1, (fraction - PHASE.holdEnd) / Math.max(PHASE.flightEnd - PHASE.holdEnd, 0.001))) : 1;
-      const nextFov = openingFov ? openingFov + (45 - openingFov) * departure : 45;
-      if (camera.fov !== nextFov) { camera.fov = nextFov; camera.updateProjectionMatrix(); }
+      /* Only an out-of-margin destination warrants a bearing correction.
+         Clamp in camera space, using the actual horizontal AND vertical FOV.
+         No correction aims at the centre or moves a destination. The final
+         approach releases this constraint into the authored reading frame. */
+      if (flightSpeed > 0.001 && index < legs.length) {
+        inverseOrientation.copy(desiredOrientation).conjugate();
+        localBearing.copy(destinationAnchors[index + 1]).sub(pos).applyQuaternion(inverseOrientation).normalize();
+        const margin = camera.aspect < 1 ? STEERING.portraitMargin : STEERING.desktopMargin;
+        const vertical = Math.tan(camera.fov * Math.PI / 360) * margin;
+        const horizontal = vertical * camera.aspect;
+        const depth = Math.max(0.0001, -localBearing.z);
+        if (localBearing.z >= 0 || Math.abs(localBearing.x) > depth * horizontal || Math.abs(localBearing.y) > depth * vertical) {
+          safeBearing.set(Math.max(-horizontal, Math.min(horizontal, localBearing.x / depth)),
+            Math.max(-vertical, Math.min(vertical, localBearing.y / depth)), -1).normalize();
+          visibilityCorrection.setFromUnitVectors(safeBearing, localBearing);
+          inverseOrientation.copy(desiredOrientation).multiply(visibilityCorrection);
+          const correctionWeight = smooth(u / STEERING.departureEnd) * (1 - smooth((u - 0.80) / 0.20));
+          desiredOrientation.slerp(inverseOrientation, correctionWeight);
+        }
+      }
+      if (!orientationReady || calm) { camera.quaternion.copy(desiredOrientation); orientationReady = true; }
+      else {
+        const angle = 2 * Math.acos(Math.min(1, Math.abs(camera.quaternion.dot(desiredOrientation))));
+        if (angle > 1e-7) camera.quaternion.slerp(desiredOrientation,
+          Math.min(1 - Math.exp(-delta * STEERING.response), STEERING.radiansPerSecond * delta / angle));
+      }
     }
 
     function resize() {
       camera.aspect = innerWidth / innerHeight;
       camera.updateProjectionMatrix();
+      const ratio = MOTION.pixelRatio('maxPixelRatio');
+      if (renderer.getPixelRatio() !== ratio) renderer.setPixelRatio(ratio);
       renderer.setSize(innerWidth, innerHeight);
       invalidate();
     }
 
     function pointer(e) {
       parallaxTarget.set(e.clientX / innerWidth - 0.5, e.clientY / innerHeight - 0.5);
-      invalidate();
+      if (!calm && !detail && flightSpeed > 0.001) invalidate();
     }
 
     function tick(now) {
@@ -457,7 +412,6 @@
         }
       }
       if (calm && !dirty) return;
-      if (!calm && !detail) time += delta;
 
       progress = calm ? targetProgress : progress + (targetProgress - progress) * (1 - Math.exp(-delta * FRICTION));
 
@@ -467,15 +421,22 @@
 
 
       const p = calm ? 0 : progress;
-      targetStars.forEach(function (s, i) {
-        s.visible = i === Math.floor(p) || i === Math.ceil(p);
-        const d = Math.abs(i - p);
-        const amount = Math.max(0, 1 - d);
-        s.scale.setScalar(i === 0 ? 0 : 0.18 + amount * 0.62);
-        s.material.opacity = 0.3 + amount * 0.6;
-        /* Distant destinations are not drawn at all. */
-        motifs[i].visible = d < 1.4;
-      });
+      if (p !== beaconProgress) {
+        const departing = Math.floor(p);
+        const arriving = Math.ceil(p);
+        for (let i = 0; i < targetStars.length; i++) {
+          const star = targetStars[i];
+          star.visible = i === departing || i === arriving;
+          const distance = Math.abs(i - p);
+          if (star.visible) {
+            const amount = Math.max(0, 1 - distance);
+            star.scale.setScalar(i === 0 ? 0 : 0.18 + amount * 0.62);
+            star.material.opacity = 0.3 + amount * 0.6;
+          }
+          motifs[i].visible = distance < 1.4;
+        }
+        beaconProgress = p;
+      }
 
       if (window.onGalaxyFrame) {
         const index = Math.min(Math.max(Math.ceil(progress - 1e-4), 0), targetStars.length - 1);
@@ -527,7 +488,9 @@
       projectDestination: projectDestination,
       setProgress: function (p) {
         if (detail) return;
-        targetProgress = Math.max(0, Math.min(waypoints.length - 1, p));
+        const next = Math.max(0, Math.min(waypoints.length - 1, p));
+        if (next === targetProgress) return;
+        targetProgress = next;
         invalidate();
       },
       /* Jumping (nav, hash, prev/next) must not fake a flight it did not fly:
@@ -537,8 +500,6 @@
         progress = targetProgress;
         orientationReady=false;
         fly(progress, 1);
-        smoothedLook.copy(desiredLook);
-        camera.lookAt(smoothedLook);
         invalidate();
       },
       setCalm: function (v) { calm = v; invalidate(); },

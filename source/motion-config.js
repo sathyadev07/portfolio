@@ -1,9 +1,10 @@
-/* Travel factors apply to the immediately preceding build. Reading holds and
-   interface transitions retain their timing; quality tiers never set speed. */
+/* Travel factors retain their baseline. Only static scroll-distance holds
+   receive LINGER; real-time transitions and steering keep their own clocks. */
 (function () {
   'use strict';
   const SPEED = Object.freeze({ desktop: 0.5, tablet: 1.1, mobile: 1.1 });
   const BASELINE = Object.freeze({ heroHold: 0.4, sectionHold: 0.64, translation: 2.112, arrivalHold: 1.8 });
+  const LINGER = 0.33;
   const reducedQuery = window.matchMedia('(prefers-reduced-motion: reduce)');
   const ua = navigator.userAgent || '';
   const handheld = /Android|iPhone|iPad|iPod|Mobile|Tablet/i.test(ua)
@@ -12,14 +13,17 @@
   const device = handheld ? (/iPhone|iPod/i.test(ua) || (/Android/i.test(ua) && /Mobile/i.test(ua))
     || Math.min(screen.width, screen.height) < 600 ? 'mobile' : 'tablet') : 'desktop';
   const factor = SPEED[device];
-  function chapter(index, speed) {
-    const dwell = index === 0 ? BASELINE.heroHold : BASELINE.sectionHold;
+  function chapter(index, speed, linger) {
+    const dwell = (index === 0 ? BASELINE.heroHold : BASELINE.sectionHold) * linger;
     const translation = BASELINE.translation / speed;
-    const scale = dwell + translation + BASELINE.arrivalHold;
+    /* u has already reached 1 during this tail: the camera is stationary.
+       Orientation settling remains time-based in galaxy.js and is not cut. */
+    const arrivalHold = BASELINE.arrivalHold * linger;
+    const scale = dwell + translation + arrivalHold;
     return { scale: scale, phase: { holdEnd: dwell / scale, flightEnd: (dwell + translation) / scale } };
   }
-  const chapters = [chapter(0, factor), chapter(1, factor)];
-  const baselineChapters = [chapter(0, 1), chapter(1, 1)];
+  const chapters = [chapter(0, factor, LINGER), chapter(1, factor, LINGER)];
+  const baselineChapters = [chapter(0, 1, 1), chapter(1, 1, 1)];
   const tiers = {
     high: { name: 'high', galaxyShare: 1, maxPixelRatio: 1.75, viewerPixelRatio: 1.6 },
     medium: { name: 'medium', galaxyShare: 0.62, maxPixelRatio: 1.5, viewerPixelRatio: 1.4 },
@@ -31,14 +35,15 @@
     if (activeTier) return activeTier;
     const cores = navigator.hardwareConcurrency || 4;
     const gb = navigator.deviceMemory || 0;
-    const pixels = innerWidth * innerHeight * Math.min(devicePixelRatio || 1, 2);
+    const pixelRatio = Math.min(devicePixelRatio || 1, 2);
+    const pixels = innerWidth * innerHeight * pixelRatio * pixelRatio;
     activeTier = device === 'mobile' ? (cores >= 8 && gb >= 6 ? tiers.medium : tiers.low)
       : cores <= 4 || (gb && gb <= 4) ? tiers.low : cores <= 6 || pixels > 4600000 ? tiers.medium : tiers.high;
     return activeTier;
   }
   function notify() { listeners.forEach(function (fn) { fn(activeTier); }); }
   window.MOTION = {
-    DEVICE: device, TRAVEL_SPEED: SPEED,
+    DEVICE: device, TRAVEL_SPEED: SPEED, LINGER: LINGER,
     travelFactor: function () { return factor; },
     chapter: function (index) { return chapters[index === 0 ? 0 : 1]; },
     baselineChapter: function (index) { return baselineChapters[index === 0 ? 0 : 1]; },

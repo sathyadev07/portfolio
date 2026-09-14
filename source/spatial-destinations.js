@@ -26,7 +26,9 @@
         return { element: el, tab: el.getAttribute('tabindex') };
       });
       return { panel: panel, hit: hit, controls: controls, readable: null, width: 0, height: 0, revision: -1, x: 0, y: 0,
-        scale: 0, visible: false, hitX: 0, hitY: 0, hitVisible: false };
+        scale: 0, visible: false, hitX: 0, hitY: 0, hitVisible: false,
+        shown: null, hitShown: null, travelling: null, labelLeft: null, labelAbove: null,
+        transform: '', hitTransform: '' };
     });
     function invalidate() { revision++; }
     if (document.fonts) document.fonts.ready.then(function () { if (!destroyed) invalidate(); });
@@ -38,6 +40,7 @@
       }
       r.panel.remove(); r.hit.remove(); r.hit.hidden = true;
       r.panel.classList.remove('is-live'); r.panel.setAttribute('aria-hidden', 'true');
+      r.shown = null; r.hitShown = null;
       r.visible = false; r.hitVisible = false; live.delete(index);
     }
     function mount(index) {
@@ -58,9 +61,11 @@
         chrome = parseFloat(getComputedStyle(document.documentElement).getPropertyValue('--chrome-height')) || 112;
         measuredRevision = revision;
       }
-      live.forEach(function (i) { if (i !== index && i !== incoming) retire(i); });
+      for (const i of live) { if (i !== index && i !== incoming) retire(i); }
       mount(index); if (incoming >= 0) mount(incoming);
-      live.forEach(function (i) {
+      /* Measure the whole active pair before writing either projection. A
+         second card must never force layout after the first card's transform. */
+      for (const i of live) {
         const r = records[i];
         if (r.revision !== revision) {
           r.width = r.panel.offsetWidth; r.height = r.panel.offsetHeight;
@@ -69,17 +74,29 @@
           const y = chrome + Math.max(0, innerHeight - chrome) / 2;
           galaxy.setDestinationLayout(i, x, y); r.revision = revision;
         }
+      }
+      for (const i of live) {
+        const r = records[i];
         galaxy.projectDestination(i, r);
         const halfW = r.width * r.scale / 2;
         const halfH = r.height * r.scale / 2;
         r.visible = r.visible && r.x + halfW > 0 && r.x - halfW < innerWidth
           && r.y + halfH > chrome && r.y - halfH < innerHeight;
-        r.panel.style.visibility = r.visible ? 'visible' : 'hidden';
-        r.panel.toggleAttribute('inert', !r.visible);
-        r.panel.setAttribute('aria-hidden', r.visible ? 'false' : 'true');
-        r.panel.style.transform = 'translate3d(' + (r.x - halfW).toFixed(3) + 'px,'
-          + (r.y - halfH).toFixed(3) + 'px,0) scale(' + r.scale.toFixed(6) + ')';
-        r.panel.classList.toggle('is-travelling', r.scale < S.readableScale);
+        if (r.shown !== r.visible) {
+          r.panel.style.visibility = r.visible ? 'visible' : 'hidden';
+          r.panel.toggleAttribute('inert', !r.visible);
+          r.panel.setAttribute('aria-hidden', r.visible ? 'false' : 'true');
+          r.shown = r.visible;
+        }
+        if (r.visible) {
+          const transform = 'translate3d(' + (r.x - halfW).toFixed(3) + 'px,'
+            + (r.y - halfH).toFixed(3) + 'px,0) scale(' + r.scale.toFixed(6) + ')';
+          if (transform !== r.transform) { r.panel.style.transform = transform; r.transform = transform; }
+        }
+        const travelling = r.scale < S.readableScale;
+        if (travelling !== r.travelling) {
+          r.panel.classList.toggle('is-travelling', travelling); r.travelling = travelling;
+        }
         r.hitVisible = r.visible && r.scale < S.readableScale;
         const readable = r.visible && !r.hitVisible;
         if (readable !== r.readable) {
@@ -93,13 +110,13 @@
         if (!r.hitVisible && readable && document.activeElement === r.hit && r.controls.length) {
           r.controls[0].element.focus({ preventScroll: true });
         }
-        r.hit.hidden = !r.hitVisible;
+        if (r.hitShown !== r.hitVisible) { r.hit.hidden = !r.hitVisible; r.hitShown = r.hitVisible; }
         if (r.hitVisible) {
           const half = S.hitSize / 2;
           r.hitX = Math.max(half, Math.min(innerWidth - half, r.x));
           r.hitY = Math.max(chrome + half + S.hitGap, Math.min(innerHeight - half, r.y));
         }
-      });
+      }
       const a = records[index];
       const b = incoming >= 0 ? records[incoming] : null;
       if (b && a.hitVisible && b.hitVisible && Math.abs(a.hitX - b.hitX) < S.hitSize + S.hitGap
@@ -108,13 +125,17 @@
         const center = Math.max(span, Math.min(innerWidth - span, (a.hitX + b.hitX) / 2));
         a.hitX = center - span / 2; b.hitX = center + span / 2;
       }
-      live.forEach(function (i) {
+      for (const i of live) {
         const r = records[i];
-        r.hit.classList.toggle('label-left', r.hitX > innerWidth / 2);
-        r.hit.classList.toggle('label-above', r.hitY > innerHeight / 2);
-        if (r.hitVisible) r.hit.style.transform = 'translate3d(' + (r.hitX - S.hitSize / 2).toFixed(2)
+        if (!r.hitVisible) continue;
+        const left = r.hitX > innerWidth / 2;
+        const above = r.hitY > innerHeight / 2;
+        if (left !== r.labelLeft) { r.hit.classList.toggle('label-left', left); r.labelLeft = left; }
+        if (above !== r.labelAbove) { r.hit.classList.toggle('label-above', above); r.labelAbove = above; }
+        const transform = 'translate3d(' + (r.hitX - S.hitSize / 2).toFixed(2)
           + 'px,' + (r.hitY - S.hitSize / 2).toFixed(2) + 'px,0)';
-      });
+        if (transform !== r.hitTransform) { r.hit.style.transform = transform; r.hitTransform = transform; }
+      }
     }
     return {
       sync: sync, invalidate: invalidate,
@@ -127,6 +148,8 @@
             if (c.tab === null) c.element.removeAttribute('tabindex'); else c.element.setAttribute('tabindex', c.tab);
           });
           records[i].readable = null;
+          records[i].shown = null; records[i].hitShown = null; records[i].travelling = null;
+          records[i].transform = ''; records[i].hitTransform = '';
           if (value) panel.remove();
           else { stage.appendChild(panel); panel.classList.add('is-live', 'is-solid');
             panel.removeAttribute('inert'); panel.removeAttribute('aria-hidden'); }

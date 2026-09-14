@@ -41,16 +41,9 @@
   if (chromeObserver) chromeObserver.observe(topbar);
   else window.addEventListener('resize', sizeChrome);
 
-  /* Chapter phase model. Every boundary is derived in source/motion-config.js
-     from the four requested multipliers, so no timing is a magic number here.
-     With travel 4x slower, dwell 2x longer and both materialization phases 5x
-     longer, a chapter reads:
-
-       hold (readable) -> disintegrate -> cruise -> materialize -> arrive
-
-     and the numbers come out at roughly 0.23 / 0.41 / 0.83 / 1.00. Crucially
-     revealStart sits well after departEnd, so the next destination never begins
-     assembling over a card that is still being read. */
+  /* Chapter boundaries come from motion-config.js. The 0.33 linger factor
+     affects the static holds only; translation and the real-time CSS/GSAP
+     transition clocks stay independent. */
   const MOTION = window.MOTION;
   /* Scroll distance per chapter, on top of the multipliers in motion-config.
 
@@ -125,8 +118,8 @@
   let baselineOffsets = [];
 
   function measure() {
-    /* CHAPTER_SCALE carries the 4x travel and 2x dwell requests, so slower
-       travel is a change to the scroll mapping itself rather than a delay. */
+    /* Each chapter carries its own hold and translation distances. Reducing
+       a static hold shortens the track without changing translation speed. */
     const base = Math.max(520, window.innerHeight) * (compactQuery.matches ? 1.05 : 1.25)
       * SLOWDOWN;
     offsets = [];
@@ -256,9 +249,14 @@
     scheduleHash(index);
   }
 
+  let progressBarTransform = '';
   function updateProgressBar() {
     const ratio = route.length > 1 ? progress / (route.length - 1) : 0;
-    progressFill.style.transform = 'scaleX(' + clamp(ratio).toFixed(4) + ')';
+    const value = 'scaleX(' + clamp(ratio).toFixed(4) + ')';
+    if (value !== progressBarTransform) {
+      progressFill.style.transform = value;
+      progressBarTransform = value;
+    }
   }
 
   function arrivedIndex() {
@@ -377,7 +375,7 @@
   let labelOpacity = '';
 
   function updateStarLabel() {
-    starLabel.classList.remove('is-visible');
+    if (starLabel.classList.contains('is-visible')) starLabel.classList.remove('is-visible');
   }
 
   window.onGalaxyFrame = function (readout) {
@@ -481,22 +479,156 @@
   /* The supplied project has no portfolio PDF. Flip this asset flag when the
      author's PDF is added; never substitute the resume for the portfolio. */
   const PORTFOLIO_PDF_AVAILABLE = false;
+
+  /* Paper has pages where the site has a camera, so print is handed a separate
+     document rather than a shrunken copy of the scene. Everything below only
+     ever touches freshly built nodes — buildPanels() and buildDetail() return
+     new elements on every call — so none of this reshaping can reach the DOM
+     the visitor is looking at. styles.css carries the matching @media print. */
   let printDocument = null;
+
+  /* Interactive blocks are each introduced by their own h3. Dropping the block
+     and leaving the heading behind would print a promise the page cannot keep
+     — 'CAD model' over nothing — so the heading leaves with it. */
+  function dropPrintBlock(panel, selector) {
+    panel.querySelectorAll(selector).forEach(function (node) {
+      const heading = node.previousElementSibling;
+      if (heading && heading.matches('h3.detail-sub')) heading.remove();
+      node.remove();
+    });
+  }
+
+  function printRow(shots, modifier) {
+    const row = doc.createElement('div');
+    row.className = modifier ? 'print-row ' + modifier : 'print-row';
+    shots.forEach(function (shot) { row.appendChild(shot); });
+    return row;
+  }
+
+  /* A single image stranded on a page reads as an accident rather than as
+     evidence, so figures are handed to the page fragmenter in rows instead of
+     one at a time: two to a row, and an odd tail joins the row before it as a
+     trio rather than standing on its own. The row is what carries
+     break-inside: avoid in the stylesheet, which is why the grouping is
+     decided here from the gallery's real length rather than guessed per
+     destination in CSS — add or remove a photo and the rows re-form. A gallery
+     that genuinely holds one image, proj-04's equalizer schematic, is the one
+     honest exception; it says so with its own class and is given a wider
+     column instead of being padded out with something unrelated. */
+  const PRINT_ROW = 2;
+  /* Conservative source budgets, in millimetres, against Letter's 251mm
+     printable height. A4 has more room. No rendered-layout measurement is
+     needed; full-frame image geometry comes from the local media manifest. */
+  const PRINT = Object.freeze({ page: 238, width: 182, gap: 5, columnGap: 6,
+    imageHeight: 64, bodyLine: 5.2, captionLine: 4, bodyCharacters: 82 });
+  function printTextHeight(node) {
+    if (node.matches('.gallery')) return 0;
+    if (node.matches('.detail-head')) return 30;
+    if (node.matches('.tags')) return 12;
+    if (node.matches('.stats')) return 18;
+    if (node.matches('h3')) return 12;
+    if (node.matches('.bullets, .note')) {
+      let height = node.matches('.note') ? 14 : 0;
+      node.querySelectorAll('li').forEach(function (line) {
+        height += Math.ceil(line.textContent.length / PRINT.bodyCharacters) * PRINT.bodyLine + 3;
+      });
+      return height + PRINT.gap;
+    }
+    return Math.max(1, Math.ceil(node.textContent.length / PRINT.bodyCharacters)) * PRINT.bodyLine + PRINT.gap;
+  }
+  function sizePrintRow(row, heightCap) {
+    const count = row.children.length;
+    const width = count === 1 ? 118 : (PRINT.width - PRINT.columnGap * (count - 1)) / count;
+    const cap = heightCap === undefined ? (count === 1 ? 80 : PRINT.imageHeight) : heightCap;
+    let height = 0;
+    Array.from(row.children).forEach(function (shot) {
+      const img = shot.querySelector('img');
+      const ratio = Number(img.getAttribute('width')) / Number(img.getAttribute('height'));
+      const imageWidth = Math.min(width, cap * ratio);
+      /* Set just one axis. Natural height preserves the measured full frame. */
+      img.style.setProperty('--print-image-width', imageWidth + 'mm');
+      const caption = shot.querySelector('figcaption');
+      const lines = Math.ceil((caption ? caption.textContent.length : 0) / Math.max(1, Math.floor(width / 1.8)));
+      height = Math.max(height, imageWidth / ratio + lines * PRINT.captionLine + 2);
+    });
+    return height + PRINT.gap;
+  }
+  function groupPrintFigures(panel) {
+    panel.querySelectorAll('.gallery').forEach(function (gallery) {
+      const shots = Array.prototype.slice.call(gallery.querySelectorAll('.shot'));
+      if (!shots.length) return;
+      if (shots.length === 1) { gallery.replaceChildren(printRow(shots, 'is-solo')); return; }
+      const rows = [];
+      for (let i = 0; i < shots.length; i += PRINT_ROW) rows.push(shots.slice(i, i + PRINT_ROW));
+      /* Two or more figures always leave at least two rows to fold into. */
+      if (rows[rows.length - 1].length < PRINT_ROW) {
+        rows[rows.length - 2] = rows[rows.length - 2].concat(rows.pop());
+      }
+      gallery.replaceChildren(...rows.map(function (row) {
+        return printRow(row, row.length > PRINT_ROW ? 'is-trio' : '');
+      }));
+    });
+  }
+
+  function paginatePrintPanel(panel) {
+    const gallery = panel.querySelector('.gallery');
+    if (!gallery) return null;
+    const rows = Array.from(gallery.children);
+    const heights = rows.map(function (row) { return sizePrintRow(row); });
+    let used = Array.from(panel.children).reduce(function (sum, node) { return sum + printTextHeight(node); }, 0);
+    let split = rows.length;
+    for (let i = 0; i < rows.length; i++) {
+      if (i === 0 && used + heights[i] > PRINT.page) {
+        const normalCap = rows[i].children.length === 1 ? 80 : PRINT.imageHeight;
+        heights[i] = sizePrintRow(rows[i], Math.max(24, normalCap - (used + heights[i] - PRINT.page)));
+      }
+      if (i > 0 && used + heights[i] > PRINT.page) { split = i; break; }
+      used += heights[i];
+    }
+    if (split === rows.length) return null;
+    /* The current galleries have at most three rows. Keeping at least the
+       first row with the narrative leaves at most two rows on page two. */
+    const continuation = doc.createElement('section');
+    continuation.className = 'panel print-continuation';
+    const heading = doc.createElement('h2');
+    heading.textContent = panel.querySelector('h2').textContent;
+    const label = doc.createElement('p');
+    label.className = 'meta'; label.textContent = 'Hardware and build media — continued';
+    const remaining = doc.createElement('div');
+    remaining.className = 'gallery';
+    rows.slice(split).forEach(function (row) { remaining.appendChild(row); });
+    continuation.append(heading, label, remaining);
+    return continuation;
+  }
+
   function preparePrint() {
     if (printDocument) return;
     printDocument = doc.createElement('article');
     printDocument.id = 'portfolio-print';
+    const cover = doc.createElement('div');
+    cover.className = 'print-cover';
+    printDocument.appendChild(cover);
     window.buildPanels(route, data).forEach(function (panel, index) {
       const waypoint = route[index];
       if (waypoint.kind === 'experience' || waypoint.kind === 'project') {
         panel.replaceChildren(...window.buildDetail(waypoint.contentId, data));
       }
-      panel.querySelectorAll('.viewer-block, button, .actions, .hint').forEach(function (node) { node.remove(); });
+      /* A CAD viewer is a canvas that never paints on paper and the machining
+         strip is video; neither has an honest still frame, and a stand-in box
+         would only spend page height saying so. Both leave entirely. */
+      dropPrintBlock(panel, '.viewer-block, .video-strip');
+      panel.querySelectorAll('button, .actions, .hint').forEach(function (node) { node.remove(); });
+      groupPrintFigures(panel);
       panel.querySelectorAll('img').forEach(function (img) { img.loading = 'eager'; });
       panel.querySelectorAll('[id]').forEach(function (node) { node.removeAttribute('id'); });
       panel.removeAttribute('id');
       panel.removeAttribute('aria-labelledby');
-      printDocument.appendChild(panel);
+      if (waypoint.kind === 'hero' || waypoint.kind === 'about') cover.appendChild(panel);
+      else {
+        const continuation = paginatePrintPanel(panel);
+        printDocument.appendChild(panel);
+        if (continuation) printDocument.appendChild(continuation);
+      }
     });
     doc.body.appendChild(printDocument);
   }
@@ -510,7 +642,9 @@
     liveRegion.textContent = 'Opening the complete portfolio for printing. Choose Save as PDF in the print dialog.';
     preparePrint();
     const images = Array.from(printDocument.querySelectorAll('img'));
-    Promise.allSettled(images.map(function (img) { return img.decode ? img.decode() : Promise.resolve(); }))
+    const ready = images.map(function (img) { return img.decode ? img.decode() : Promise.resolve(); });
+    if (doc.fonts) ready.push(doc.fonts.ready);
+    Promise.allSettled(ready)
       .then(function () { window.print(); });
   }
 
