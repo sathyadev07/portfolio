@@ -10,11 +10,11 @@ window.EXPERIENCES_DATA = [
     logoType: 'sikorsky',
     tags: ['CATIA V5', '3DEXPERIENCE', 'SAP ERP'],
     bullets: [
-      'Designed and revised 14 production tooling fixtures and jigs (drill jigs, assembly locators, masking fixtures) in CATIA V5 for CH-53K, Black Hawk, and search-and-rescue rotorcraft, 3 of which are now in use on the shop floor.',
-      'Toleranced 12 tools to ASME Y14.5 GD&T, matching every callout to the process that would actually make the part (CNC milling, manual machining, or additive) rather than to a single default standard.',
-      'Traced constraint and leakage failures in 3 released production tools back to root cause and redesigned each one, which cut procurement lead time and dropped a secondary machining setup from the build.',
-      'Maintained multi-level BOMs for all 14 tools and routed engineering change orders through SAP ERP and 3DEXPERIENCE PLM, so manufacturing engineers and machinists worked from current tooling data across releases.',
-      'Co-designed the hybrid-electric powertrain for the dual-propeller Nomad VTOL, packaging an ICE, motor generator, battery pack, and a per-propeller motor and planetary gearbox inside thermal limits; presented to leadership.'
+      'Designed & revised 14 production tooling fixtures & jigs (drill jigs, assembly locators, masking fixtures) in CATIA V5 for CH-53K, Black Hawk, & search-and-rescue rotorcraft; 3 now in use on shop floor; 11 in procurement & manufacturing',
+      'Toleranced 12 tools to ASME Y14.5 GD&T, matching every callout to the process that would actually make the part (CNC milling, manual machining, or additive) rather than to a single default standard.Toleranced 12 tools to ASME Y14.5 GD&T, defining datum reference frames and profile/position callouts (±0.001 in. to ±0.015 in.) matched to CNC milling, manual machining, and additive processes',
+      'Traced kinematic underconstraint and lack of sealing in 3 released production tools back to root cause; redesigned geometry to eliminate secondary mill setups and reduce vendor procurement lead time by 2 weeks',
+      'Maintained multi-level BOMs for all 14 tools & routed engineering change orders through SAP ERP & 3DEXPERIENCE PLM, so manufacturing engineers & machinists worked from current tooling data across releases',
+      'Led mechanical design on hybrid propulsion system intern project for rotor-blown Nomad VTOL; packaged ICE, motor generator, battery pack, & a dual motor & planetary gearbox 20% under 80 lb weight limits; presented to leadership'
     ],
     stats: [
       { label: 'Tools Designed', value: '14' },
@@ -56,15 +56,17 @@ window.EXPERIENCES_DATA = [
     logoType: 'fsae',
     tags: ['Siemens NX', 'Ansys FEA', '5-Axis CNC'],
     bullets: [
-      'Designed the rear upright and planet carrier for the 2027 outrunner drivetrain in NX, cutting weight 32%.',
-      'Ran static structural FEA on the rear upright and hub group, then reworked stiffener and fillet geometry against the stress peaks and 2 mm deflections it exposed, and pulled dead weight out of near-zero-stress areas.',
-      'Drafted the rear upright to sub-0.003 in. bearing and seal bore tolerances, called out for a manual boring finish.',
-      'Cut wheel-upright machining time 50% by reworking the toolpaths from 3-axis to 5-axis CNC milling, then built the fixture plate that locates and holds the upright through the remaining 3-axis production runs.'
+      'Executed static structural FEA on the rear upright & hub group targeting SF 1.5; optimized rib topology & fillet radii against localized stress concentrations to reduce suspension bracket compliance from 0.079 in. to under 0.02 in.',
+      'Ran static structural FEA on the rear upright and hub group, then reworked stiffener and fillet geometry against the stress peaks and 2 mm deflections it exposed, and pulled dead weight out of near-zero-stress areas',
+      'Resolved stress propagation issues in Ansys via strain-energy study & first principles calculation; identified bonded contacts as an issue & switched to frictionless contacts on specific interfaces for correct stress propagation & deformation',
+      'Ran mesh convergence studies to produce highest fidelity results on max cornering, accel, & combined tire contact patch cases to verify previous studies and geometry modifications',
+      'Enhanced lumped-parameter battery thermal model accuracy by calculating effective thermal conductivities from empirical literature & test datasets, replacing uniform isotropic cell assumptions to increase thermal simulation fidelity',
+      'Detailed 2D production drawings for rear upright assemblies, applying ISO P7 interference limits & ISO H8 transition fit on 3.937 in. & 4.528 in. nominal bearing seats (−0.0009 in./ − 0.0022 in. & +.002 in. / 0 in.) to maintain a press fit for SKF 61818 bearings across operating thermal ranges in 7075-T6 aluminum'
     ],
     stats: [
       { label: 'Machining Time Cut', value: '50%' },
       { label: 'Weight Reduction', value: '32%' },
-      { label: 'Bore & Bearing Tolerance', value: '0.003"' }
+      { label: 'Bearing Tolerance', value: '0.001"' }
     ],
     viewers: [
       {
@@ -74,7 +76,7 @@ window.EXPERIENCES_DATA = [
       },
       {
         id: 'assembly-3d',
-        title: '[3D Interactive Assembly Viewer: 2027 Outrunner Drivetrain Assembly]',
+        title: '[3D Interactive Viewer: 2027 Outrunner Drivetrain Assembly]',
         type: 'cad-fixture'
       },
       {
