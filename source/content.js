@@ -12,7 +12,7 @@
   const COPY = {
     name: 'SATHYA DEVARAJAN',
     role: '// MECHANICAL DESIGN, STRUCTURES & DFM',
-    tagline: 'Mechanical engineering student building real hardware in design, structures, and manufacturing, with an eye on problems that matter for people and the planet.',
+    tagline: '',
     facts: [
       ['University', 'Purdue University'],
       ['Program', 'John Martinson Honors College'],
@@ -22,7 +22,7 @@
     ],
     about: "My depth is in mechanical design, structural analysis, and design-for-manufacturing. I've machined drivetrain components for Formula SAE Electric and designed production tooling for rotorcraft at Sikorsky, and what I care about is the full path from geometry and tolerancing to a part that comes off a machine and works. From that base I've pushed outward into the systems around the hardware: sensor fusion and closed-loop control, analog circuit design, and Python simulations for feasibility and trade studies. I got into engineering to work on problems that genuinely help people and the planet, and the more of the stack I understand, the more useful I can be on them.",
     contactHeading: 'GET IN TOUCH',
-    contactBody: 'Available for mechanical engineering internships, tooling and structures design, and additive/subtractive manufacturing collaboration.',
+    contactBody: '',
     email: 'sathyadevarajan07@gmail.com',
     phone: '630-888-0715',
     phoneHref: 'tel:6308880715',
