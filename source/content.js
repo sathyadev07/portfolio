@@ -20,7 +20,7 @@
       ['Graduation', 'Expected May 2028'],
       ['Citizenship', 'US Citizen']
     ],
-    about: "My depth is in mechanical design, structural analysis, and design-for-manufacturing. I've machined drivetrain components for Formula SAE Electric and designed production tooling for rotorcraft at Sikorsky, and what I care about is the full path from geometry and tolerancing to a part that comes off a machine and works. From that base I've pushed outward into the systems around the hardware: sensor fusion and closed-loop control, analog circuit design, and Python simulations for feasibility and trade studies. I got into engineering to work on problems that genuinely help people and the planet, and the more of the stack I understand, the more useful I can be on them.",
+    about: "Hello, I'm Sathya! My depth thus far is in mechanical design, structural analysis, and design-for-manufacturing. I've machined drivetrain components for Purdue Electric Racing (PER--Formula SAE Electric) and designed production tooling for rotorcraft at Sikorsky, and I love when I can design a part and take it all the way from structural mechanics and optimization to GD&T to CAM to machining to finished product. From medevac helicopters at Sikorsky to electric vehicles at PER, I'm building my first principles skills to genuinely help people and planet. With that said, enjoy your space odyssey!",
     contactHeading: 'GET IN TOUCH',
     contactBody: '',
     email: 'sathyadevarajan07@gmail.com',
@@ -30,7 +30,7 @@
     linkedinLabel: 'linkedin.com/in/sathya-devarajan',
     portfolioPdf: 'assets/Sathya_Devarajan_Portfolio.pdf',
     resumePdf: 'assets/Resume.pdf',
-    status: 'AVAILABLE_FOR_INTERNSHIPS_AND_PROJECTS'
+    status: ''
   };
 
   /* Authentic employer / organization marks supplied by the author, keyed by
@@ -271,7 +271,7 @@
         acc.push(el('dd', { text: fact[1] }));
         return acc;
       }, [])),
-      el('p', { class: 'hint', text: 'View Resume opens the PDF in a reader you can download or print. View Portfolio PDF opens a print-ready portfolio; choose Save as PDF. Scroll to explore, or select a destination above.' })
+      el('p', { class: 'hint', text: '' })
     ]);
   }
 
