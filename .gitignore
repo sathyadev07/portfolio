@@ -1,0 +1,23 @@
+# Open Design internal working files
+.file-versions/
+.od-frames/
+.od-skills/
+extracted/
+scripts/
+
+# Notes and instructions (not part of the site)
+*.md
+!README.md
+
+# Backup archives and raw assets not used by the live site
+*.zip
+*.glb
+image.png
+image-*.png
+Image-2.html
+Image-2.html.artifact.json
+index.html.artifact.json
+
+# Build output and dependencies
+dist/
+node_modules/
