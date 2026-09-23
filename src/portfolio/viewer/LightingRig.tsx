@@ -1,0 +1,1 @@
+export default function LightingRig(){return <><hemisphereLight args={['#f2f5fa','#b9c2d2',1.8]}/><directionalLight color="#f2f5fa" intensity={2.4} position={[3.2,5.4,3.8]}/><directionalLight color="#f2f5fa" intensity={1.2} position={[-3.6,1.4,-2.4]}/><directionalLight color="#f2f5fa" intensity={1.4} position={[-1.2,2.2,-4.4]}/></>;}

@@ -17,3 +17,7 @@ image-*.png
 Image-2.html
 Image-2.html.artifact.json
 index.html.artifact.json
+
+# Build output and dependencies
+dist/
+node_modules/

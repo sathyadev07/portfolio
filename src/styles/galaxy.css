@@ -1,0 +1,40 @@
+.galaxy-canvas{position:fixed;inset:0;z-index:0;overflow:hidden}.galaxy-canvas--background{pointer-events:none}.galaxy-canvas canvas{display:block}.galaxy-mode .galaxy-canvas{pointer-events:none}
+.galaxy-status{position:fixed;left:50%;bottom:24px;transform:translateX(-50%);z-index:6;margin:0;display:flex;align-items:center;gap:12px;padding:12px 16px;border:0;border-radius:var(--r-sm);--glow-fill:var(--panel);font-size:18px;color:var(--ink);max-width:calc(100vw - 32px)}.galaxy-status progress{inline-size:96px;block-size:4px;accent-color:var(--amber)}
+html.mode-galaxy,html.mode-galaxy body{overflow:hidden;height:100%}.galaxy-mode{position:relative;min-height:100dvh}
+
+/* The journey stage owns input only. It holds no layout of its own: every
+   destination is placed by the 3D projection of its anchor, not by this box. */
+.journey-stage{position:fixed;inset:0;z-index:4;touch-action:pan-x;overscroll-behavior:none;isolation:isolate}
+
+/* The camera supplies a complete viewport projection per panel. There is no
+   second CSS perspective or nested 3D scene to reinterpret its coordinates. */
+.journey-space{position:absolute;inset:0;pointer-events:none}
+
+/* Measurable panel boxes, anchored at their projected top-left. Centering is
+   part of the projection matrix, not a nested transform on a zero-size point. */
+.journey-object{position:absolute;top:0;left:0;width:min(760px,calc(100vw - 48px));transform-origin:0 0;visibility:hidden;will-change:transform,opacity}
+.journey-object-content{position:relative;display:flow-root;width:100%}
+.journey-object--hero{width:min(1240px,calc(100vw - 48px))}
+.journey-object [tabindex="-1"],.journey-object button:disabled{pointer-events:none}
+
+/* Cool Stuff ON reuses the reading-mode name size token for token. The projector
+   scales the element so that at the arrival distance one CSS pixel is one screen
+   pixel, so this really is the same visual size as the hero name rather than a
+   second scale that happens to look similar. */
+.journey-start{width:100%;text-align:center}
+.journey-start h1{display:flex;justify-content:center;flex-wrap:wrap;gap:.24em;font-size:clamp(40px,7.8vw,104px);letter-spacing:var(--heading-tracking);line-height:1.12;text-transform:uppercase;text-shadow:var(--name-shadow)}
+.journey-start h1 span{display:block}
+
+.journey-about{width:100%;padding:32px;border:0;border-radius:var(--r);--glow-fill:var(--panel)}.journey-about h2{font-size:clamp(24px,3vw,40px);margin-bottom:16px}.journey-about .portfolio-prose{font-size:20px;line-height:1.5;max-width:70ch}
+.destination-pill{display:flex;flex-direction:column;align-items:center;gap:16px;width:100%;padding:32px clamp(24px,4vw,56px);border:0;border-radius:var(--r);--glow-fill:var(--panel);color:var(--ink);text-align:center;transition:background var(--motion-enter)}.destination-pill:disabled{opacity:1;color:var(--ink)}
+.destination-title{display:block;font-family:var(--display);font-weight:var(--display-weight);font-size:clamp(24px,3.5vw,44px);line-height:1.2;text-wrap:balance;overflow-wrap:break-word}.destination-pill .portfolio-eyebrow{font-size:16px}.destination-pill .portfolio-meta{display:inline-flex;align-items:center;gap:8px;font-size:18px}
+@media(hover:hover){.destination-pill:not(:disabled):hover{--glow-fill:color-mix(in oklch,var(--space-0) 96%,var(--ink));color:var(--ink)}}
+@media(max-width:767px){.journey-start h1{flex-direction:column;gap:8px}.journey-about{padding:24px}.journey-about .portfolio-prose{font-size:19px;line-height:1.5}.destination-pill{padding:24px;gap:12px}}
+@media(max-height:600px){.journey-about{padding:16px}.journey-about h2{font-size:24px;margin-bottom:8px}.journey-about .portfolio-prose{font-size:16px;line-height:1.5}.journey-about .portfolio-prose p+p{margin-top:8px}}
+
+.journey-start h1{ text-shadow:var(--name-shadow),var(--stellar-text) }
+.journey-about h2,.destination-title{color:var(--title-accent);text-shadow:var(--stellar-text)}
+.destination-brand{justify-content:center;--od-gap:16px;max-width:100%}
+.destination-logo{display:block;width:64px;height:auto;object-fit:contain;border-radius:var(--r-sm);flex:none}
+.destination-pill.interactive-panel{transition:transform var(--motion-enter) ease-out,box-shadow var(--motion-enter) ease-out,background var(--motion-enter) ease-out}
+@media(max-width:767px){.destination-logo{width:48px}.destination-brand{--od-gap:8px}}

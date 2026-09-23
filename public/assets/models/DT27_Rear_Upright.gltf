@@ -1,0 +1,134 @@
+{
+    "asset": {
+        "version": "2.0"
+    },
+    "accessors": [
+        {
+            "componentType": 5123,
+            "count": 29238,
+            "type": "SCALAR"
+        },
+        {
+            "componentType": 5126,
+            "count": 8627,
+            "type": "VEC3",
+            "max": [
+                -1449.9853515625,
+                692.581298828125,
+                97.44076538085938
+            ],
+            "min": [
+                -1616.6019287109376,
+                582.9164428710938,
+                -102.0417709350586
+            ]
+        },
+        {
+            "componentType": 5126,
+            "count": 8627,
+            "type": "VEC3",
+            "max": [
+                1.0,
+                0.9999942183494568,
+                0.9998477101325989
+            ],
+            "min": [
+                -1.0,
+                -0.9998477101325989,
+                -0.9998477101325989
+            ]
+        }
+    ],
+    "bufferViews": [
+        {
+            "buffer": 0,
+            "byteOffset": 28,
+            "byteLength": 109978
+        }
+    ],
+    "buffers": [
+        {
+            "byteLength": 110006,
+            "uri": "DT27_Rear_Upright0.bin"
+        }
+    ],
+    "materials": [
+        {
+            "pbrMetallicRoughness": {
+                "baseColorFactor": [
+                    0.6117647290229797,
+                    0.6588234901428223,
+                    0.6705881953239441,
+                    1.0
+                ],
+                "metallicFactor": 0.589519739151001,
+                "roughnessFactor": 0.6324555277824402
+            },
+            "name": "face1290",
+            "doubleSided": true
+        }
+    ],
+    "meshes": [
+        {
+            "primitives": [
+                {
+                    "attributes": {
+                        "NORMAL": 2,
+                        "POSITION": 1
+                    },
+                    "indices": 0,
+                    "material": 0,
+                    "extensions": {
+                        "KHR_draco_mesh_compression": {
+                            "bufferView": 0,
+                            "attributes": {
+                                "POSITION": 0,
+                                "NORMAL": 1
+                            }
+                        }
+                    }
+                }
+            ]
+        }
+    ],
+    "nodes": [
+        {
+            "mesh": 0
+        },
+        {
+            "children": [
+                0
+            ]
+        },
+        {
+            "children": [
+                1
+            ],
+            "translation": [
+                1.5299999713897706,
+                -0.6326474547386169,
+                -0.00013348681386560202
+            ],
+            "scale": [
+                0.0010000000474974514,
+                0.0010000000474974514,
+                0.0010000000474974514
+            ],
+            "name": "DT27_Rear_Fatright - Copy"
+        }
+    ],
+    "scenes": [
+        {
+            "nodes": [
+                2
+            ]
+        }
+    ],
+    "scene": 0,
+    "extensionsUsed": [
+        "KHR_draco_mesh_compression"
+    ],
+    "extensionsRequired": [
+        "KHR_draco_mesh_compression"
+    ]
+}

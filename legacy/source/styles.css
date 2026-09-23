@@ -1,0 +1,1400 @@
+/* Galaxy portfolio — visual system.
+   Every colour, type size, spacing step, radius and duration is declared once
+   here as a custom property; components consume the tokens, never raw values. */
+
+:root {
+  /* Three colour layers: deep space, stellar neutrals, one amber focus accent. */
+  --space-0: #000000;
+  --space-1: #000000;
+  --panel: rgba(0, 0, 0, 0.74);
+  --panel-solid: #000000;
+  --chrome-height: 112px;
+  --ink: #f2f5fa;
+  --ink-dim: #b9c2d2;
+  --muted: #9aa5b8;
+  --line: rgba(226, 237, 255, 0.14);
+  --line-strong: rgba(226, 237, 255, 0.26);
+  --amber: #f5bf74;
+  --amber-strong: #f59e0b;
+  --amber-ink: #2a1700;
+  --amber-glow: rgba(245, 191, 116, 0.22);
+
+  --r: 14px;
+  --r-sm: 10px;
+  --r-full: 999px;
+
+  --s-1: 4px;
+  --s-2: 8px;
+  --s-3: 16px;
+  --s-4: 24px;
+  --s-5: 32px;
+  --s-6: 48px;
+  --s-7: 64px;
+  --name-tracking: 0.08em;
+  --heading-tracking: 0.08em;
+
+  --font-display: 'Reference Alphabet', 'Space Grotesk', 'Inter', system-ui, sans-serif;
+  --font-body: 'Inter', system-ui, -apple-system, 'Segoe UI', 'Helvetica Neue', Arial, sans-serif;
+  --font-mono: 'JetBrains Mono', ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+
+  --enter: 240ms cubic-bezier(0.16, 0.84, 0.44, 1);
+  --exit: 160ms cubic-bezier(0.4, 0, 1, 1);
+}
+
+/* The reconstructed display face covers A–Z and space only; everything else
+   falls through to the stack above. */
+@font-face {
+  font-family: 'Reference Alphabet';
+  src: url('../assets/fonts/reference-alphabet.otf') format('opentype');
+  font-display: swap;
+  unicode-range: U+0020, U+0041-005A;
+}
+
+* { box-sizing: border-box; }
+
+html {
+  background: var(--space-0);
+  color-scheme: dark;
+}
+
+body {
+  margin: 0;
+  min-height: 100dvh;
+  font-family: var(--font-body);
+  font-size: 16px;
+  line-height: 1.6;
+  color: var(--ink);
+  background: var(--space-0);
+  -webkit-font-smoothing: antialiased;
+}
+
+/* A faint field stands in for the scene when WebGL is unavailable. */
+.no-webgl body {
+  background: var(--space-0);
+}
+
+h1, h2, h3 { margin: 0; line-height: 1.15; }
+p { margin: 0; }
+ul, ol, dl { margin: 0; padding: 0; }
+li { list-style: none; }
+img { max-width: 100%; }
+
+a { color: var(--amber); text-underline-offset: 3px; }
+a:hover { color: var(--amber-strong); }
+
+:focus-visible {
+  outline: 2px solid var(--amber);
+  outline-offset: 3px;
+  border-radius: var(--r-sm);
+}
+
+.mono { font-family: var(--font-mono); }
+.display { font-family: var(--font-display); letter-spacing: 0.14em; text-transform: uppercase; }
+
+.skip-link {
+  position: fixed;
+  top: var(--s-2);
+  left: var(--s-2);
+  z-index: 200;
+  padding: 12px 18px;
+  border-radius: var(--r-sm);
+  background: var(--amber-strong);
+  color: var(--amber-ink);
+  font-weight: 600;
+  text-decoration: none;
+  transform: translateY(-200%);
+  transition: transform var(--enter);
+}
+.skip-link:focus { transform: translateY(0); color: var(--amber-ink); }
+
+.visually-hidden {
+  position: absolute;
+  width: 1px; height: 1px;
+  margin: -1px; padding: 0;
+  overflow: hidden;
+  clip-path: inset(50%);
+  white-space: nowrap;
+}
+
+/* ---------- scene + scroll scaffolding ---------- */
+
+#galaxy {
+  position: fixed;
+  inset: 0;
+  z-index: 0;
+}
+#galaxy canvas { display: block; width: 100%; height: 100%; }
+.topbar:has(#galaxy-load-status:not([hidden])) { flex-wrap: wrap; }
+#galaxy-load-status { flex: 1 0 100%; font-family: var(--font-body); font-size: 16px; color: var(--ink-dim); }
+#galaxy-load-status[hidden] { display: none; }
+.galaxy-credit { font-family: var(--font-body); font-size: 16px; line-height: 1.5; color: var(--muted); }
+.galaxy-credit a { display: inline-flex; align-items: center; min-height: 44px; color: var(--ink); }
+.galaxy-credit a:hover { color: var(--ink); text-decoration-thickness: 2px; }
+
+#track { width: 100%; pointer-events: none; }
+
+.mode-odyssey #stage {
+  position: fixed;
+  inset: 0;
+  z-index: 10;
+  pointer-events: none;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: flex-start;
+  gap: var(--s-3);
+  padding: calc(var(--chrome-height) + var(--s-3)) clamp(16px, 5vw, 80px) var(--s-4);
+}
+
+.mode-static #stage {
+  position: relative;
+  z-index: 10;
+  max-width: 1000px;
+  margin: 0 auto;
+  padding: calc(var(--chrome-height) + var(--s-4)) var(--s-4) var(--s-7);
+  display: flex;
+  flex-direction: column;
+  gap: var(--s-7);
+}
+
+/* ---------- top bar ---------- */
+
+.topbar {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  z-index: 50;
+  display: flex;
+  align-items: center;
+  gap: var(--s-4);
+  padding: var(--s-2) var(--s-4);
+  background: rgba(0, 0, 0, 0.88);
+  backdrop-filter: blur(10px);
+}
+
+.brand {
+  flex: none;
+  font-size: 14px;
+  color: var(--ink);
+  text-decoration: none;
+  letter-spacing: 0.24em;
+}
+.brand:hover { color: var(--amber); }
+
+.waypoints { flex: 1 1 auto; min-width: 0; }
+.waypoints ul {
+  display: flex;
+  gap: var(--s-1);
+  overflow-x: auto;
+  scrollbar-width: none;
+}
+.waypoints ul::-webkit-scrollbar { display: none; }
+
+.nav-link {
+  flex: none;
+  padding: 10px 14px;
+  border: 1px solid transparent;
+  border-radius: var(--r-full);
+  background: transparent;
+  color: var(--ink-dim);
+  font: inherit;
+  font-size: 13px;
+  cursor: pointer;
+  transition: color var(--enter), border-color var(--enter), background var(--enter);
+}
+.nav-link:hover { color: var(--ink); border-color: var(--line); }
+.nav-link.is-current {
+  color: var(--amber);
+  border-color: rgba(245, 191, 116, 0.45);
+  background: rgba(245, 191, 116, 0.08);
+}
+
+.topbar-tools { flex: none; gap: var(--s-2); }
+
+.progress { display: flex; align-items: center; gap: var(--s-2); }
+.progress-rail {
+  width: 96px;
+  height: 3px;
+  border-radius: var(--r-full);
+  background: var(--line);
+  overflow: hidden;
+}
+#progress-fill {
+  height: 100%;
+  width: 100%;
+  transform-origin: 0 50%;
+  transform: scaleX(0);
+  background: linear-gradient(90deg, var(--amber), var(--amber-strong));
+}
+#progress-label { font-size: 12px; color: var(--muted); }
+
+.icon-btn {
+  width: 44px; height: 44px;
+  display: grid; place-items: center;
+  border: 1px solid var(--line);
+  border-radius: var(--r-full);
+  background: rgba(8, 12, 22, 0.6);
+  color: var(--ink);
+  font-size: 20px;
+  line-height: 1;
+  cursor: pointer;
+  transition: border-color var(--enter), color var(--enter);
+}
+.icon-btn:hover:not(:disabled) { border-color: var(--line-strong); color: var(--amber); }
+.icon-btn:disabled { opacity: 0.35; cursor: default; }
+
+.chip {
+  padding: 10px 14px;
+  border: 1px solid var(--line);
+  border-radius: var(--r-full);
+  background: rgba(8, 12, 22, 0.6);
+  color: var(--ink-dim);
+  font-family: var(--font-mono);
+  font-size: 12px;
+  cursor: pointer;
+  transition: border-color var(--enter), color var(--enter);
+}
+.chip:hover { color: var(--ink); border-color: var(--line-strong); }
+.chip[aria-pressed='true'] { color: var(--amber); border-color: rgba(245, 191, 116, 0.5); }
+
+.btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: var(--s-2);
+  padding: 12px 20px;
+  border: 1px solid transparent;
+  border-radius: var(--r-full);
+  font-size: 14px;
+  font-weight: 600;
+  text-decoration: none;
+  cursor: pointer;
+  transition: background var(--enter), border-color var(--enter), color var(--enter);
+}
+.btn.small { padding: 10px 16px; font-size: 13px; }
+.btn.primary { background: var(--amber-strong); color: var(--amber-ink); }
+.btn.primary:hover { background: var(--amber); color: var(--amber-ink); }
+.btn.ghost {
+  background: rgba(8, 12, 22, 0.6);
+  border-color: var(--line);
+  color: var(--ink);
+}
+.btn.ghost:hover { border-color: rgba(245, 191, 116, 0.5); color: var(--amber); }
+
+/* ---------- destination panels ---------- */
+
+.panel {
+  display: none;
+  pointer-events: auto;
+}
+.panel.is-live { display: block; }
+
+.mode-odyssey .panel {
+  position: relative;
+  flex: 0 1 auto;
+  min-height: 0;
+  width: min(46vw, 600px);
+  max-height: 100%;
+  overflow-y: auto;
+  opacity: 1;
+  transform: none;
+}
+
+/* Spatial content stays opaque and actionable at every visible distance. */
+
+.mode-odyssey .panel-hero { width: min(56vw, 720px); }
+
+.panel-inner {
+  display: flex;
+  flex-direction: column;
+  gap: var(--s-3);
+  padding: var(--s-5);
+  border: 1px solid var(--line);
+  border-radius: var(--r);
+  background: var(--panel);
+  -webkit-backdrop-filter: blur(14px);
+  backdrop-filter: blur(14px);
+}
+/* The full 14px sample is what makes the dwell legible over the galaxy, and
+   that is the only moment it earns its cost. While the card is deforming the
+   compositor is already backdrop-sampling through a blurred, skewed parent
+   every frame — the most expensive thing on the scroll path — and the motion
+   blur on the parent hides the difference anyway. So the radius drops during
+   travel and comes back the instant the card settles. */
+.mode-odyssey .panel.is-travelling .panel-inner {
+  -webkit-backdrop-filter: blur(5px);
+  backdrop-filter: blur(5px);
+}
+.mode-static .panel { scroll-margin-top: calc(var(--chrome-height) + var(--s-3)); }
+.mode-static .panel-inner { background: var(--panel); }
+
+.eyebrow {
+  font-size: 12px;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: var(--amber);
+}
+
+.panel h1.display { font-size: clamp(30px, 5vw, 58px); }
+.panel h2.display { font-size: clamp(22px, 3vw, 34px); }
+.panel .name {
+  color: var(--ink);
+  letter-spacing: var(--name-tracking);
+  word-spacing: 0;
+  font-kerning: normal;
+  line-height: 1.25;
+  text-wrap: balance;
+  overflow-wrap: anywhere;
+}
+.panel h2.display, .detail-body h2.display {
+  letter-spacing: var(--heading-tracking);
+  line-height: 1.25;
+  text-wrap: balance;
+}
+
+.panel-heading {
+  font-size: clamp(17px, 1.6vw, 21px);
+  font-weight: 600;
+  color: var(--ink);
+}
+.lead { font-size: clamp(16px, 1.5vw, 19px); color: var(--ink-dim); max-width: 62ch; }
+.body { color: var(--ink-dim); max-width: 68ch; }
+.meta { font-size: 13px; color: var(--muted); }
+.hint { font-size: 13px; color: var(--muted); }
+
+.bullets { display: flex; flex-direction: column; gap: var(--s-3); }
+.bullets li {
+  position: relative;
+  padding-left: var(--s-4);
+  color: var(--ink-dim);
+}
+.bullets li::before {
+  content: '';
+  position: absolute;
+  left: 4px;
+  top: 11px;
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: var(--amber);
+}
+
+.tags { display: flex; flex-wrap: wrap; gap: var(--s-2); }
+.tag {
+  padding: 6px 12px;
+  border: 1px solid var(--line);
+  border-radius: var(--r-full);
+  font-family: var(--font-mono);
+  font-size: 12px;
+  color: var(--ink-dim);
+}
+
+.stats {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
+  gap: var(--s-3);
+}
+.stat { gap: var(--s-1); }
+.stat-value {
+  font-family: var(--font-mono);
+  font-size: 26px;
+  font-weight: 600;
+  color: var(--amber);
+}
+.stat-label { font-size: 12px; color: var(--muted); }
+
+.metric {
+  gap: var(--s-3);
+  padding: var(--s-3);
+  border: 1px solid var(--line);
+  border-radius: var(--r-sm);
+}
+.metric-label { font-size: 12px; color: var(--muted); text-transform: uppercase; letter-spacing: 0.12em; }
+.metric-value { margin-left: auto; font-family: var(--font-mono); color: var(--amber); }
+
+.facts {
+  display: grid;
+  grid-template-columns: auto 1fr;
+  gap: var(--s-2) var(--s-4);
+  padding-top: var(--s-3);
+  border-top: 1px solid var(--line);
+  font-size: 13px;
+}
+.facts dt { color: var(--muted); }
+.facts dd { margin: 0; color: var(--ink); text-align: right; }
+
+.actions { gap: var(--s-2); }
+
+.status { gap: var(--s-2); font-size: 13px; color: var(--ink-dim); }
+.status-dot {
+  width: 8px; height: 8px;
+  border-radius: 50%;
+  background: var(--amber);
+  box-shadow: 0 0 12px var(--amber-glow);
+}
+
+.contact-actions { display: flex; flex-direction: column; gap: var(--s-2); align-items: flex-start; }
+.copy-email { justify-content: space-between; width: 100%; font-family: var(--font-mono); }
+.copy-hint { font-size: 11px; letter-spacing: 0.12em; text-transform: uppercase; opacity: 0.75; }
+
+/* skills */
+.skill-groups {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  gap: var(--s-4);
+}
+.skill-group-title {
+  font-size: 12px;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--amber);
+  margin-bottom: var(--s-2);
+}
+.skill-list { display: flex; flex-direction: column; gap: var(--s-2); }
+.skill-name { font-size: 14px; color: var(--ink); }
+.skill-uses { font-size: 12px; color: var(--muted); }
+
+#constellation {
+  width: 100%;
+  max-width: 420px;
+  aspect-ratio: 1 / 1;
+  margin-top: var(--s-2);
+}
+.constellation-lines line { stroke: rgba(245, 191, 116, 0.35); stroke-width: 0.16; }
+.constellation-star { fill: var(--amber); opacity: 0.85; }
+
+/* ---------- approaching destination label ---------- */
+
+#star-label {
+  position: fixed;
+  top: 0;
+  left: 0;
+  z-index: 20;
+  opacity: 0;
+  pointer-events: none;
+  visibility: hidden;
+  will-change: transform, opacity;
+}
+#star-label.is-visible { visibility: visible; }
+#star-label .star-label-inner {
+  display: block;
+  transform: translate(-50%, -180%);
+  padding: 6px 12px;
+  border: 1px solid rgba(245, 191, 116, 0.5);
+  border-radius: var(--r-full);
+  background: rgba(4, 6, 12, 0.7);
+  font-family: var(--font-mono);
+  font-size: 12px;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--amber);
+  white-space: nowrap;
+}
+
+/* ---------- detail overlay ---------- */
+
+.detail {
+  position: fixed;
+  inset: 0;
+  z-index: 80;
+  display: grid;
+  place-items: center;
+  padding: var(--s-3);
+}
+.detail[hidden] { display: none; }
+
+.detail-scrim {
+  position: absolute;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.75);
+  backdrop-filter: blur(16px);
+  border: 0;
+  padding: 0;
+  cursor: pointer;
+}
+
+.detail-panel {
+  position: relative;
+  display: grid;
+  grid-template-rows: auto minmax(0, 1fr);
+  width: 88vw;
+  height: 88dvh;
+  max-width: 1440px;
+  max-height: 100%;
+  border: 1px solid var(--line);
+  border-radius: var(--r);
+  background: var(--panel-solid);
+  transform-origin: center;
+}
+@keyframes detail-in {
+  from { opacity: 0; transform: translate3d(0, 24px, 0); }
+  to { opacity: 1; transform: none; }
+}
+
+.detail-bar {
+  display: flex;
+  align-items: center;
+  gap: var(--s-2);
+  padding: var(--s-3) var(--s-4);
+  border-bottom: 1px solid var(--line);
+}
+#detail-position { font-size: 12px; color: var(--muted); }
+.detail-bar .spacer { flex: 1 1 auto; }
+
+.detail-body {
+  display: flex;
+  flex-direction: column;
+  gap: var(--s-3);
+  padding: var(--s-4);
+  overflow-y: auto;
+  overscroll-behavior: contain;
+}
+.detail-body h2.display { font-size: clamp(22px, 3vw, 32px); }
+.detail-sub {
+  margin-top: var(--s-2);
+  font-size: 16px;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  color: var(--amber);
+}
+
+.note {
+  padding: var(--s-3);
+  border: 1px solid var(--line);
+  border-radius: var(--r-sm);
+}
+.note-title { font-size: 12px; color: var(--amber); }
+.note-lines li { font-size: 13px; color: var(--ink-dim); }
+
+.specs { display: grid; grid-template-columns: auto 1fr; gap: var(--s-2) var(--s-4); font-size: 14px; }
+.specs dt { color: var(--muted); }
+.specs dd { margin: 0; color: var(--ink); text-align: right; font-family: var(--font-mono); font-size: 13px; }
+
+.gallery {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+  gap: var(--s-3);
+}
+.shot { margin: 0; display: flex; flex-direction: column; gap: var(--s-2); }
+.shot img {
+  width: 100%;
+  height: auto;
+  border: 1px solid var(--line);
+  border-radius: var(--r-sm);
+  background: var(--space-1);
+}
+.shot figcaption { font-size: 12px; color: var(--muted); }
+
+/* ---------- machining footage ---------- */
+
+/* The strip sits below the model block. Every capture is 16:9, so the frame
+   declares that ratio outright and reserves its box before the first byte of
+   video arrives — nothing under it moves when a clip attaches. */
+.video-strip {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(min(100%, 260px), 1fr));
+  gap: var(--s-3);
+}
+.video-item { margin: 0; display: flex; flex-direction: column; gap: var(--s-2); }
+.video-frame {
+  position: relative;
+  aspect-ratio: 16 / 9;
+  border: 1px solid var(--line);
+  border-radius: var(--r-sm);
+  overflow: hidden;
+  background: var(--space-1);
+}
+.video-frame video {
+  display: block;
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+  background: var(--space-1);
+}
+.video-frame video[hidden] { display: none; }
+.video-play {
+  position: absolute;
+  inset: 0;
+  display: grid;
+  place-items: center;
+  padding: 0;
+  border: 0;
+  background: rgba(0, 0, 0, 0.3);
+  cursor: pointer;
+  transition: background var(--enter);
+}
+.video-play[hidden] { display: none; }
+/* The focus ring lives inside the frame, which clips its overflow. */
+.video-play:focus-visible { outline-offset: -5px; border-radius: var(--r-sm); }
+.video-play-mark {
+  display: grid;
+  place-items: center;
+  width: 56px;
+  height: 56px;
+  border: 1px solid var(--line-strong);
+  border-radius: var(--r-full);
+  background: rgba(0, 0, 0, 0.7);
+  transition: border-color var(--enter), background var(--enter);
+}
+.video-play-mark::after {
+  content: '';
+  width: 0;
+  height: 0;
+  margin-left: 4px;
+  border-left: 15px solid var(--amber);
+  border-top: 9px solid transparent;
+  border-bottom: 9px solid transparent;
+}
+.video-cap { font-size: 12px; color: var(--muted); }
+@media (hover: hover) {
+  /* The scrim lifts rather than the mark dimming, so the amber triangle and
+     the frame behind it both gain contrast on hover, never lose it. */
+  .video-play:hover { background: rgba(0, 0, 0, 0.16); }
+  .video-play:hover .video-play-mark { border-color: var(--amber); background: rgba(0, 0, 0, 0.82); }
+}
+
+/* No project carries an organization mark, so its head is a plain stack and
+   the title starts at the same left edge as everything above it. */
+.detail-head-stacked { display: block; }
+
+.viewer-block { display: flex; flex-direction: column; gap: var(--s-2); }
+.viewer-caption { font-size: 12px; color: var(--muted); }
+.viewer-host {
+  position: relative;
+  display: block;
+  height: clamp(240px, 38dvh, 360px);
+  border: 1px solid var(--line);
+  border-radius: var(--r-sm);
+  background: radial-gradient(60% 60% at 50% 40%, rgba(24, 33, 54, 0.8), var(--space-1));
+  touch-action: none;
+}
+.viewer-controls { gap: var(--s-2); }
+.viewer-host canvas { display: block; width: 100%; height: 100%; }
+.viewer-loading { position: absolute; top: var(--s-3); left: var(--s-3); right: var(--s-3); font-size: 16px; color: var(--ink); }
+.viewer-caption { font-size: 16px; line-height: 1.5; }
+
+/* ---------- responsive ---------- */
+
+@media (max-width: 900px) {
+  .topbar {
+    flex-wrap: wrap;
+    padding: var(--s-2) var(--s-3);
+    row-gap: var(--s-2);
+  }
+  .brand { font-size: 12px; }
+  .waypoints { order: 3; flex-basis: 100%; }
+  .progress-rail { width: 56px; }
+
+  .mode-odyssey .panel {
+    width: 100%;
+    max-height: 100%;
+    transform: none;
+  }
+  .mode-odyssey .panel-hero { width: 100%; }
+  .panel-inner {
+    padding: var(--s-4);
+    border-radius: var(--r);
+  }
+  .mode-static #stage { padding-top: calc(var(--chrome-height) + var(--s-4)); }
+  .facts dd { text-align: left; }
+  .specs { grid-template-columns: 1fr; }
+  .specs dd { text-align: left; }
+  .detail-panel { max-height: 94dvh; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .mode-odyssey .panel { filter: none; }
+  .detail-panel { animation: none; }
+  html { scroll-behavior: auto; }
+}
+
+/* OLED integration and metadata card system. */
+html, body, .panel, .detail-body, .waypoints ul { scrollbar-width: none; }
+::-webkit-scrollbar { display: none; }
+html.detail-open { overflow: hidden; }
+#galaxy, #galaxy canvas { background: var(--space-0); }
+.panel-inner { min-width: 0; }
+.card { width: 100%; color: var(--ink); font: inherit; text-align: left; cursor: pointer; }
+.card > span { display: block; }
+.card .card-head { display: flex; align-items: center; gap: var(--s-3); }
+.card-company { flex: 1; font-size: 14px; letter-spacing: 0.08em; overflow-wrap: anywhere; }
+.card-role { font-size: clamp(20px, 2.4vw, 32px); line-height: 1.3; }
+.card-title { font-size: clamp(20px, 2.4vw, 32px); line-height: 1.35; overflow-wrap: anywhere; }
+.card-number, .card-open, .detail-number { color: var(--amber); font-size: 13px; }
+.card-date { color: var(--ink-dim); font-size: 14px; }
+.card-open { align-self: flex-end; border-bottom: 1px solid currentColor; }
+.logo-mark { display: block; flex: none; width: 40px; }
+.logo-mark img { display: block; width: 100%; height: auto; object-fit: contain; }
+.detail-head .logo-mark { width: 64px; }
+.detail-head { gap: var(--s-4); align-items: flex-start; }
+.detail-headings { display: grid; gap: var(--s-2); min-width: 0; }
+.detail-headings h2 { overflow-wrap: anywhere; }
+.flip-logo { position: fixed; z-index: 1; pointer-events: none; transform-origin: center; }
+.contact-actions { align-items: stretch; }
+.pill { display: grid; gap: var(--s-1); width: 100%; padding: var(--s-3) var(--s-4); border: 1px solid var(--line-strong); border-radius: var(--r-full); color: var(--ink); text-decoration: none; }
+.pill-label { display: block; color: var(--amber); font-size: 12px; }
+.pill-value { display: block; font-size: 16px; overflow-wrap: anywhere; }
+.pill.primary { border-color: var(--amber); }
+.status { align-items: flex-start; }
+.status-dot { display: block; flex: none; margin-top: var(--s-2); }
+.status .mono { min-width: 0; overflow-wrap: anywhere; }
+.btn { font-family: var(--font-body); }
+.btn-icon { display: block; font-size: 20px; line-height: 1; }
+.actions .btn { white-space: nowrap; }
+.detail-body { min-width: 0; min-height: 0; }
+.detail-body > * { flex-shrink: 0; }
+.gallery { grid-template-columns: repeat(auto-fit, minmax(min(100%, 240px), 1fr)); }
+.stat-value { font-size: clamp(20px, 2.4vw, 28px); }
+.topbar { flex-wrap: wrap; }
+.waypoints ul { gap: var(--s-2); }
+.topbar-tools { margin-left: auto; flex-wrap: wrap; }
+.nav-link { white-space: nowrap; }
+#portfolio-print { display: none; }
+@media (hover: hover) {
+  .card:hover { border-color: var(--amber); }
+  .pill:hover { color: var(--ink); border-color: var(--amber); }
+}
+@media (max-width: 1024px) {
+  .waypoints { order: 3; flex-basis: 100%; }
+  .progress-rail { display: none; }
+}
+@media (max-width: 768px) {
+  .mode-odyssey #stage { justify-content: flex-end; padding-inline: var(--s-3); padding-bottom: max(var(--s-3), env(safe-area-inset-bottom)); }
+  .mode-odyssey .panel, .mode-odyssey .panel-hero { width: 100%; }
+  .detail-panel { width: 100%; height: 90dvh; }
+  .detail { padding: var(--s-2); }
+  .detail-bar, .detail-body { padding: var(--s-3); }
+  .facts { grid-template-columns: 1fr; gap: var(--s-1); }
+  .facts dd { margin-bottom: var(--s-2); }
+  .pill { padding: var(--s-3); border-radius: var(--r); }
+  .detail-head { flex-wrap: wrap; gap: var(--s-3); }
+  .brand { flex-basis: 100%; }
+  .topbar-tools { width: 100%; justify-content: flex-end; }
+  .progress { margin-right: auto; }
+  .panel h1.display { font-size: clamp(24px, 6.4vw, 40px); overflow-wrap: anywhere; }
+}
+@media (max-width: 375px) {
+  .panel-inner { padding: var(--s-3); }
+  .card-title, .card-role { font-size: 20px; }
+  .topbar { gap: var(--s-2); }
+}
+@media (min-width: 1440px) {
+  .mode-odyssey .panel { width: min(46vw, 680px); }
+  .mode-odyssey .panel-hero { width: min(56vw, 800px); }
+}
+
+/* ==========================================================================
+   Atmospheric controls, section-bar typography, resume sheet, real-model
+   viewer and centred mobile composition.
+   ========================================================================== */
+
+/* ---------- translucent controls ----------
+
+   Every control is now a pane of tinted glass over the galaxy rather than an
+   opaque block sitting on top of it. Hierarchy is unchanged: the primary action
+   is the only amber-lit surface, ghost and chip stay neutral.
+
+   Hover and active never touch the foreground colour, and never lighten the
+   fill — they answer through border, luminosity and a 1px lift. Text contrast
+   therefore cannot fall below its resting value in any state, which is the one
+   thing a translucent control is otherwise prone to breaking. */
+
+.btn, .chip, .icon-btn, .nav-link, .pill {
+  -webkit-backdrop-filter: blur(10px) saturate(115%);
+  backdrop-filter: blur(10px) saturate(115%);
+  transition:
+    border-color var(--enter),
+    box-shadow var(--enter),
+    transform var(--enter),
+    background var(--enter);
+}
+
+/* Primary: amber-lit glass. The fill is held constant across states so the
+   amber label keeps its resting contrast (~10:1 over the panel). */
+.btn.primary {
+  background: rgba(245, 158, 11, 0.16);
+  border-color: rgba(245, 191, 116, 0.62);
+  color: var(--amber);
+  box-shadow: 0 0 0 1px rgba(245, 191, 116, 0.08) inset, 0 0 18px rgba(245, 191, 116, 0.1);
+}
+.btn.primary:hover {
+  background: rgba(245, 158, 11, 0.16);
+  color: var(--amber);
+  border-color: var(--amber);
+  box-shadow: 0 0 0 1px rgba(245, 191, 116, 0.16) inset, 0 0 26px rgba(245, 191, 116, 0.24);
+  transform: translateY(-1px);
+}
+.btn.primary:active {
+  /* Darker, not lighter: pressing a control should raise its contrast. */
+  background: rgba(245, 158, 11, 0.1);
+  transform: translateY(0);
+  box-shadow: 0 0 0 1px rgba(245, 191, 116, 0.2) inset;
+}
+
+/* Ghost: neutral glass, ink label. */
+.btn.ghost {
+  background: rgba(8, 12, 22, 0.5);
+  border-color: var(--line);
+  color: var(--ink);
+  box-shadow: 0 0 0 1px rgba(226, 237, 255, 0.04) inset;
+}
+.btn.ghost:hover {
+  background: rgba(8, 12, 22, 0.5);
+  color: var(--ink);
+  border-color: var(--line-strong);
+  box-shadow: 0 0 0 1px rgba(226, 237, 255, 0.1) inset, 0 0 18px rgba(226, 237, 255, 0.08);
+  transform: translateY(-1px);
+}
+.btn.ghost:active {
+  background: rgba(4, 7, 14, 0.66);
+  transform: translateY(0);
+}
+
+.chip, .icon-btn {
+  background: rgba(8, 12, 22, 0.46);
+  box-shadow: 0 0 0 1px rgba(226, 237, 255, 0.03) inset;
+}
+.chip { color: var(--ink-dim); text-decoration: none; }
+.chip:hover {
+  background: rgba(8, 12, 22, 0.46);
+  /* Label brightens: a contrast increase, never a fade to muted. */
+  color: var(--ink);
+  border-color: var(--line-strong);
+  box-shadow: 0 0 0 1px rgba(226, 237, 255, 0.09) inset;
+}
+.chip:active { background: rgba(4, 7, 14, 0.62); }
+.chip[aria-pressed='true'] {
+  color: var(--amber);
+  border-color: rgba(245, 191, 116, 0.55);
+  background: rgba(245, 158, 11, 0.12);
+}
+.chip[aria-pressed='true']:hover {
+  color: var(--amber);
+  border-color: var(--amber);
+  background: rgba(245, 158, 11, 0.12);
+}
+
+.icon-btn:hover:not(:disabled) {
+  background: rgba(8, 12, 22, 0.46);
+  border-color: rgba(245, 191, 116, 0.5);
+  color: var(--amber);
+  box-shadow: 0 0 16px rgba(245, 191, 116, 0.16);
+}
+.icon-btn:active:not(:disabled) { background: rgba(4, 7, 14, 0.64); }
+
+.pill {
+  background: rgba(8, 12, 22, 0.42);
+  box-shadow: 0 0 0 1px rgba(226, 237, 255, 0.03) inset;
+}
+.pill.primary { background: rgba(245, 158, 11, 0.1); }
+@media (hover: hover) {
+  .pill:hover {
+    background: rgba(8, 12, 22, 0.42);
+    color: var(--ink);
+    border-color: var(--amber);
+    box-shadow: 0 0 20px rgba(245, 191, 116, 0.14);
+    transform: translateY(-1px);
+  }
+  .pill.primary:hover { background: rgba(245, 158, 11, 0.1); }
+  .card:hover {
+    border-color: rgba(245, 191, 116, 0.55);
+    box-shadow: 0 0 28px rgba(245, 191, 116, 0.1);
+  }
+}
+
+/* The skip link stays opaque: it must be unmistakable the instant it lands. */
+.skip-link { -webkit-backdrop-filter: none; backdrop-filter: none; }
+
+/* ---------- the diagonal arrow ----------
+   Small, top-right, optically aligned with the cap height of the label. It is
+   drawn, so it inherits currentColor in every state and cannot fall out of
+   contrast with its own button. */
+.btn-arrow {
+  display: block;
+  flex: none;
+  width: 12px;
+  height: 12px;
+  margin-top: -1px;
+  opacity: 0.9;
+  transition: transform var(--enter);
+}
+.btn:hover .btn-arrow { transform: translate(1px, -1px); }
+.btn-icon { display: block; font-size: 20px; line-height: 1; }
+
+/* ---------- section bar: the name's own typeface ----------
+   The waypoint labels now use --font-display, the same stack the name and
+   wordmark use. The reconstructed face covers A-Z and space only, so the
+   labels are set in caps in order to actually render in it; sizing, pill
+   geometry and the 44px touch target are unchanged. */
+.nav-link {
+  font-family: var(--font-display);
+  font-size: 12px;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+}
+.nav-link:hover { color: var(--ink); border-color: var(--line); background: rgba(8, 12, 22, 0.4); }
+.nav-link.is-current {
+  color: var(--amber);
+  border-color: rgba(245, 191, 116, 0.45);
+  background: rgba(245, 191, 116, 0.08);
+}
+.nav-link.is-current:hover { color: var(--amber); border-color: var(--amber); }
+
+
+/* Camera projection is the sole owner of destination transforms. */
+
+/* ---------- resume sheet ---------- */
+
+.sheet {
+  position: fixed;
+  inset: 0;
+  z-index: 90;
+  display: grid;
+  place-items: center;
+  padding: var(--s-3);
+}
+.sheet[hidden] { display: none; }
+
+.sheet-scrim {
+  position: absolute;
+  inset: 0;
+  border: 0;
+  padding: 0;
+  background: rgba(0, 0, 0, 0.78);
+  -webkit-backdrop-filter: blur(16px);
+  backdrop-filter: blur(16px);
+  cursor: pointer;
+}
+
+.sheet-panel {
+  position: relative;
+  display: grid;
+  grid-template-rows: auto minmax(0, 1fr);
+  width: min(1100px, 92vw);
+  height: 92dvh;
+  max-height: 100%;
+  border: 1px solid var(--line);
+  border-radius: var(--r);
+  background: var(--panel-solid);
+  overflow: hidden;
+}
+
+.sheet-bar {
+  gap: var(--s-2);
+  flex-wrap: wrap;
+  padding: var(--s-3) var(--s-4);
+  border-bottom: 1px solid var(--line);
+}
+.sheet-title { font-size: 14px; color: var(--ink); }
+.sheet-bar .spacer { flex: 1 1 auto; }
+
+.sheet-body {
+  display: grid;
+  grid-template-rows: minmax(0, 1fr) auto;
+  min-height: 0;
+  background: #0b0e14;
+}
+/* The browser's own PDF viewer does the reading work; the site only frames it,
+   so the document is never duplicated into markup. */
+.sheet-frame {
+  width: 100%;
+  height: 100%;
+  min-height: 0;
+  border: 0;
+  display: block;
+  background: #0b0e14;
+}
+.sheet-fallback {
+  padding: var(--s-2) var(--s-4) var(--s-3);
+  font-size: 12px;
+  color: var(--muted);
+}
+html.sheet-open { overflow: hidden; }
+
+/* ---------- real-model viewer ---------- */
+
+.viewer-host canvas { display: block; width: 100%; height: 100%; }
+
+/* A destination whose model has not been exported shows the author's own
+   render at its measured ratio, full frame — never a cropped box and never a
+   stand-in shape. One axis is capped; the other stays automatic. */
+.viewer-host.viewer-pending {
+  display: grid;
+  place-items: center;
+  height: auto;
+  min-height: 0;
+  padding: var(--s-3);
+  background: none;
+  border-style: dashed;
+  border-color: var(--line);
+  touch-action: auto;
+  text-align: center;
+}
+.viewer-note { font-size: 12px; color: var(--muted); }
+.viewer-host:focus-visible { outline: 2px solid var(--amber); outline-offset: 3px; }
+
+/* ---------- centred mobile composition ----------
+   The requirement the previous build failed: a destination must materialise
+   around the middle of the phone viewport, not against its bottom edge. The
+   stage is centred and its block padding is symmetric, so the card's own centre
+   lands on the viewport centre and no further scrolling is needed to read it.
+   The 3D viewer and every content card inherit the same centring. */
+@media (max-width: 768px) {
+  .mode-odyssey #stage {
+    justify-content: center;
+    align-items: stretch;
+    padding-inline: var(--s-3);
+    padding-top: calc(var(--chrome-height) + var(--s-2));
+    padding-bottom: max(calc(var(--chrome-height) + var(--s-2)), env(safe-area-inset-bottom));
+  }
+  .sheet { padding: 0; }
+  .sheet-panel { width: 100%; height: 100dvh; border: 0; border-radius: 0; }
+  .sheet-bar { padding: var(--s-2) var(--s-3); }
+}
+
+/* Short viewports in landscape: keep the card centred but let it use the width
+   it has instead of stacking into a strip. */
+@media (max-height: 520px) and (orientation: landscape) {
+  .mode-odyssey #stage {
+    justify-content: center;
+    padding-top: calc(var(--chrome-height) + var(--s-1));
+    padding-bottom: var(--s-2);
+  }
+  .mode-odyssey .panel, .mode-odyssey .panel-hero { width: min(62vw, 620px); }
+  .panel-inner { padding: var(--s-3); gap: var(--s-2); }
+  .sheet-panel { height: 100dvh; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  /* Reduced motion defaults to the normal-flow portfolio. */
+  .btn, .chip, .icon-btn, .nav-link, .pill, .btn-arrow { transition: none; }
+  .btn:hover, .pill:hover { transform: none; }
+}
+
+
+/* The resume bar uses .chip for links as well as buttons. An inline <a> ignores
+   min-height, so the chip is made a flex box: the 44px touch target from
+   .od-touch then applies to anchors and buttons alike. */
+.chip {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: var(--s-1);
+  text-align: center;
+}
+
+/* Spatial anchors are scene content, not document layout. Their inner content
+   retains normal flow; projection alone places the two possible scene planes. */
+.mode-odyssey #stage { display: block; padding: 0; overflow: clip; }
+.mode-odyssey .panel {
+  position: absolute;
+  top: 0;
+  left: 0;
+  margin: 0;
+  max-height: max(80px, calc(100dvh - var(--chrome-height) - var(--s-6)));
+  transform-origin: 0 0;
+  transition: none;
+  filter: none;
+  will-change: transform;
+  overscroll-behavior: contain;
+  scrollbar-width: thin;
+  scrollbar-color: var(--line-strong) transparent;
+}
+.mode-odyssey .panel.is-travelling { scrollbar-width: none; }
+.mode-odyssey .panel.is-travelling .panel-inner { backdrop-filter: none; -webkit-backdrop-filter: none; }
+.destination-hit {
+  position: absolute;
+  top: 0;
+  left: 0;
+  z-index: 4;
+  display: grid;
+  place-items: center;
+  width: 44px;
+  height: 44px;
+  padding: 0;
+  border: 1px solid var(--line-strong);
+  border-radius: var(--r-full);
+  color: var(--ink);
+  background: transparent;
+  cursor: pointer;
+  pointer-events: auto;
+  touch-action: manipulation;
+}
+.destination-hit[hidden], .mode-static .destination-hit { display: none; }
+.destination-hit:focus-visible { border-color: var(--amber); outline: 2px solid var(--amber); outline-offset: 3px; }
+.destination-hit-label {
+  position: absolute;
+  top: 52px;
+  left: 0;
+  display: block;
+  width: max-content;
+  max-width: min(240px, calc(100vw - 48px));
+  padding: var(--s-2) var(--s-3);
+  border: 1px solid var(--line-strong);
+  border-radius: var(--r-sm);
+  color: var(--ink);
+  background: var(--panel-solid);
+  font: 500 16px/1.5 var(--font-body);
+  text-align: left;
+  overflow-wrap: anywhere;
+  visibility: hidden;
+  pointer-events: none;
+}
+.destination-hit.label-left .destination-hit-label { left: auto; right: 0; }
+.destination-hit.label-above .destination-hit-label { top: auto; bottom: 52px; }
+.destination-hit:focus-visible .destination-hit-label { visibility: visible; }
+@media (hover: hover) {
+  .destination-hit:hover { border-color: var(--amber); }
+  .destination-hit:hover .destination-hit-label { visibility: visible; }
+}
+@media (max-width: 900px) {
+  .mode-odyssey .panel, .mode-odyssey .panel-hero { width: calc(100% - var(--s-5)); }
+}
+@media (max-height: 520px) and (orientation: landscape) {
+  .mode-odyssey .panel, .mode-odyssey .panel-hero { width: min(72vw, 680px); }
+}
+
+/* ---------- the printed portfolio ----------
+
+   The site is a scroll-driven scene; paper has pages instead of a camera, so
+   print gets its own document — #portfolio-print, assembled in odyssey.js —
+   and its own type system rather than a shrunken screenshot of the screen
+   layout. The whole point of the block below is that a visitor who chooses
+   Save as PDF ends up with a portfolio: one family, one body size, one heading
+   size, one spacing step, the same on every destination, and no destination
+   allowed to run past two pages.
+
+   Nothing here uses a flex or grid container that has to fragment. Column flex
+   is still the box browsers break worst across pages, so the vertical rhythm
+   is carried by margins and the only grids left — figure rows, stats, facts —
+   are small enough to declare break-inside: avoid and mean it. */
+@media print {
+  /* 14mm leaves 182 x 269mm live on A4 and 188 x 251mm on Letter. Every height
+     budgeted below is measured against the Letter figure, the tighter of the
+     two, so the page counts hold on either stock. */
+  @page { margin: 14mm; }
+  html, body { background: white !important; color: black !important; overflow: visible !important; }
+  body > *:not(#portfolio-print) { display: none !important; }
+
+  /* The shared style, declared once and consumed by every rule under it. The
+     screen's 24pt/20pt headings were sized for a card floating in a galaxy;
+     on paper they only pushed the write-up onto a second sheet. */
+  #portfolio-print {
+    --print-body: 10.5pt;
+    --print-heading: 15pt;
+    --print-sub: 11pt;
+    --print-small: 8.5pt;
+    --print-gap: 5mm;
+    --print-tight: 3mm;
+    --print-rule: #c8c8c8;
+    display: block;
+    font-family: var(--font-body);
+    font-size: var(--print-body);
+    line-height: 1.38;
+    orphans: 2;
+    widows: 2;
+  }
+  /* Ink, not atmosphere. The amber accent, the glass panels, the glows and the
+     display face (which only covers A-Z, so it falls back mid-word on paper)
+     all resolve to one black-on-white voice, and the hairlines that survive
+     are given a colour that actually prints — var(--line) is white at 14%,
+     which is nothing at all on a white sheet. */
+  #portfolio-print * {
+    color: black !important;
+    font-family: var(--font-body) !important;
+    background: none !important;
+    border-color: var(--print-rule) !important;
+    text-shadow: none !important;
+    box-shadow: none !important;
+    filter: none !important;
+    -webkit-backdrop-filter: none !important;
+    backdrop-filter: none !important;
+  }
+  #portfolio-print .display { letter-spacing: 0.04em; }
+
+  /* --- destinations and pagination --- */
+
+  #portfolio-print .panel {
+    display: block !important;
+    position: static !important;
+    width: auto !important;
+    max-width: none !important;
+    max-height: none !important;
+    overflow: visible !important;
+    transform: none !important;
+    opacity: 1 !important;
+    margin: 0;
+    break-before: page;
+  }
+  #portfolio-print .panel:first-child { break-before: auto; }
+  #portfolio-print .print-cover { display: block; break-inside: avoid; }
+  #portfolio-print .print-continuation { break-before: page; }
+  /* Hero and About are the cover sheet. Neither is long enough to earn a page
+     of its own — together they run around half a sheet — and starting About on
+     page two would spend a whole page on a name and five facts. So the page
+     break is attached to the destination kind rather than fired blindly at
+     every .panel, and the pair is kept whole. If the two ever do outgrow one
+     page, About is the half that matters and break-inside keeps it intact. */
+  #portfolio-print .panel-hero,
+  #portfolio-print .panel-about { break-before: auto; break-inside: avoid; }
+  #portfolio-print .panel-hero { break-after: avoid; }
+  #portfolio-print .panel-about { margin-top: 8mm; }
+  #portfolio-print .panel-inner { display: block; padding: 0; border: 0; }
+
+  /* One rhythm for every block on every destination. Experience and project
+     panels carry their detail parts directly; hero, about and contact keep a
+     .panel-inner, so both levels get the same step. */
+  #portfolio-print .panel > *,
+  #portfolio-print .panel-inner > * { margin: 0 0 var(--print-gap); }
+  #portfolio-print .panel > *:last-child,
+  #portfolio-print .panel-inner > *:last-child { margin-bottom: 0; }
+
+  /* --- type --- */
+
+  #portfolio-print h1,
+  #portfolio-print h2 { font-size: var(--print-heading); line-height: 1.2; break-after: avoid; }
+  #portfolio-print h3 {
+    font-size: var(--print-sub);
+    line-height: 1.25;
+    font-weight: 600;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    break-after: avoid;
+  }
+  #portfolio-print .panel-inner > h1,
+  #portfolio-print .panel-inner > h2 { margin: 0 0 var(--print-tight); }
+  /* A subhead sits closer to what it introduces than to what precedes it. */
+  #portfolio-print .panel > h3 { margin: 2mm 0 var(--print-tight); }
+  #portfolio-print .eyebrow,
+  #portfolio-print .meta,
+  #portfolio-print .status,
+  #portfolio-print .facts { font-size: var(--print-small); }
+  #portfolio-print .eyebrow { letter-spacing: 0.1em; margin-bottom: 1.5mm; }
+  /* Screen measures (62ch / 68ch) exist to stop a card spanning a wide
+     viewport; the printed column is already only 182mm and holding the text
+     back from it would just add white space. */
+  #portfolio-print .lead,
+  #portfolio-print .body { font-size: var(--print-body); max-width: none; }
+
+  #portfolio-print .detail-head { break-inside: avoid; margin-bottom: var(--print-tight); }
+  #portfolio-print .detail-head .logo-mark { width: 14mm; margin-bottom: 2.5mm; }
+  #portfolio-print .detail-headings { display: grid; gap: 1.5mm; }
+  #portfolio-print .detail-number { font-size: var(--print-small); letter-spacing: 0.1em; }
+
+  #portfolio-print .bullets { display: block; }
+  #portfolio-print .bullets li { padding-left: 5mm; margin-bottom: var(--print-tight); break-inside: avoid; }
+  #portfolio-print .bullets li:last-child { margin-bottom: 0; }
+  /* The marker is a background, and background graphics are the first thing a
+     print dialog switches off — this is the one place in the document that
+     genuinely needs its ink, so it asks for it. */
+  #portfolio-print .bullets li::before {
+    left: 0;
+    top: 1.8mm;
+    width: 1.2mm;
+    height: 1.2mm;
+    background: black;
+    -webkit-print-color-adjust: exact;
+    print-color-adjust: exact;
+  }
+
+  #portfolio-print .tags { gap: 2mm; break-inside: avoid; }
+  #portfolio-print .tag { padding: 0.8mm 2.4mm; font-size: var(--print-small); }
+
+  #portfolio-print .stats {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(36mm, 1fr));
+    gap: 4mm;
+    break-inside: avoid;
+  }
+  #portfolio-print .stat { display: block; }
+  #portfolio-print .stat-value { display: block; font-size: var(--print-sub); font-weight: 600; }
+  #portfolio-print .stat-label { display: block; font-size: var(--print-small); }
+
+  #portfolio-print .note { padding: 3mm; border: 1px solid var(--print-rule); border-radius: 0; break-inside: avoid; }
+  #portfolio-print .note-title { font-size: var(--print-small); letter-spacing: 0.08em; margin-bottom: 1.5mm; }
+  #portfolio-print .note-lines li { font-size: var(--print-body); }
+
+  /* --- figures --- */
+
+  /* .print-row is built in odyssey.js and is the only unit the fragmenter is
+     shown, so a page ends up with two images, three, or none — never one
+     stranded figure that reads as an accident. The caps are what keep a photo
+     from eating a page the write-up needs. The print builder assigns each
+     image a width from its measured aspect ratio and the shared 64mm height
+     budget, with extra room for the single schematic. Natural height keeps
+     every frame intact; no fixed-height image box distorts its ratio. */
+  #portfolio-print .gallery { display: block; }
+  #portfolio-print .print-row {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+    gap: 5mm 6mm;
+    margin: 0 0 var(--print-gap);
+    break-inside: avoid;
+  }
+  #portfolio-print .print-row:last-child { margin-bottom: 0; }
+  #portfolio-print .print-row.is-trio { grid-template-columns: repeat(3, minmax(0, 1fr)); }
+  /* proj-04 ships one schematic and has nothing to pair it with. It gets a
+     wider column rather than a partner, so the stage labels stay readable. */
+  #portfolio-print .print-row.is-solo { grid-template-columns: minmax(0, 118mm); }
+  #portfolio-print .shot { display: block; margin: 0; break-inside: avoid; }
+  #portfolio-print .shot img {
+    display: block;
+    width: min(100%, var(--print-image-width, 100%));
+    height: auto;
+    max-height: none;
+    object-fit: contain;
+    border: 1px solid var(--print-rule);
+    border-radius: 0;
+  }
+  #portfolio-print .shot figcaption { margin-top: 1.5mm; font-size: var(--print-small); line-height: 1.3; }
+
+  /* --- contact --- */
+
+  #portfolio-print .contact-actions { display: block; }
+  #portfolio-print .pill {
+    display: grid;
+    grid-template-columns: 34mm 1fr;
+    gap: 1.5mm 4mm;
+    width: auto;
+    padding: 0;
+    margin: 0 0 2mm;
+    border: 0;
+    border-radius: 0;
+  }
+  #portfolio-print .pill-label { font-size: var(--print-small); }
+  #portfolio-print .pill-value { font-size: var(--print-body); }
+  #portfolio-print .facts {
+    display: grid;
+    grid-template-columns: 34mm 1fr;
+    gap: 1.5mm 4mm;
+    padding-top: var(--print-tight);
+    border-top: 1px solid var(--print-rule);
+    break-inside: avoid;
+  }
+  /* Right-aligned values worked against a 600px card; across 182mm they leave
+     a canyon between the label and its answer. */
+  #portfolio-print .facts dd { text-align: left; }
+
+  /* Belt and braces. preparePrint() already drops every one of these before
+     they reach the print tree — a CAD canvas and a video element have no
+     honest still, and a placeholder frame would only spend page height saying
+     so — but nothing interactive gets to print an empty box if a future block
+     slips past the JS. */
+  #portfolio-print .viewer-block,
+  #portfolio-print .viewer-host,
+  #portfolio-print .viewer-controls,
+  #portfolio-print .card-open,
+  #portfolio-print .video-strip,
+  #portfolio-print .video-item,
+  #portfolio-print .video-frame,
+  #portfolio-print .video-preview,
+  #portfolio-print .video-play,
+  #portfolio-print .video-cap,
+  #portfolio-print video,
+  #portfolio-print canvas,
+  #portfolio-print button,
+  #portfolio-print .actions,
+  #portfolio-print .hint,
+  #portfolio-print .status-dot { display: none !important; }
+}

@@ -28,7 +28,7 @@
     phoneHref: 'tel:6308880715',
     linkedin: 'https://linkedin.com/in/sathya-devarajan',
     linkedinLabel: 'linkedin.com/in/sathya-devarajan',
-    portfolioPdf: 'assets/Sathya_Devarajan_Portfolio.pdf',
+    portfolioPdf: 'assets/Portfolio_Compressed.pdf',
     resumePdf: 'assets/Resume.pdf',
     status: ''
   };

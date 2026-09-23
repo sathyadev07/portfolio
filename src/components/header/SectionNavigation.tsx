@@ -1,0 +1,1 @@
+export default function SectionNavigation(){return <nav className="portfolio-nav" aria-label="Portfolio sections" data-od-id="section-navigation"><ul className="od-cluster"><li><a href="#about">About</a></li><li><a href="#experience">Experience</a></li><li><a href="#projects">Projects</a></li></ul></nav>;}

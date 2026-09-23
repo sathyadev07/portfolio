@@ -1,0 +1,47 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="color-scheme" content="dark">
+<meta name="robots" content="noindex">
+<title>Page not found &#8212; Sathya Devarajan</title>
+<link rel="icon" href="/favicon.svg" type="image/svg+xml">
+<style>
+:root{color-scheme:dark;--bg:#000;--fg:#f2f5fa;--dim:#b9c2d2;--amber:#f5bf74;--glow:200,196,188}
+*{box-sizing:border-box}
+body{margin:0;min-height:100dvh;display:grid;place-items:center;padding:24px;background:var(--bg);color:var(--fg);
+ font-family:'Chillax',system-ui,-apple-system,'Segoe UI',sans-serif;line-height:1.6}
+@font-face{font-family:'Chillax';src:url('/assets/fonts/Chillax-Medium.woff2') format('woff2');font-weight:400 700;font-display:swap;size-adjust:111%}
+@font-face{font-family:'Unbounded';src:url('/assets/fonts/unbounded-semibold.woff2') format('woff2');font-weight:600;font-display:swap}
+main{width:min(620px,100%);display:flex;flex-direction:column;gap:24px;padding:40px;position:relative;isolation:isolate;border-radius:14px}
+/* Same feathered fill and haze as the site's boxes, inlined because this page
+   ships without the bundle. */
+main::before{content:"";position:absolute;inset:0;z-index:-1;border-radius:inherit;background:rgba(0,0,0,.7);
+ mask-image:linear-gradient(to bottom,transparent,#000 16px,#000 calc(100% - 16px),transparent),linear-gradient(to right,transparent,#000 16px,#000 calc(100% - 16px),transparent);
+ mask-composite:intersect;-webkit-mask-composite:source-in}
+main::after{content:"";position:absolute;inset:-40px;z-index:-2;border-radius:inherit;pointer-events:none;
+ background:radial-gradient(closest-side,rgba(var(--glow),.16),rgba(var(--glow),.06) 60%,transparent);filter:blur(24px)}
+p.eyebrow{margin:0;font-size:16px;letter-spacing:.1em;text-transform:uppercase;color:var(--dim)}
+h1{margin:0;font-family:'Unbounded','Chillax',system-ui,sans-serif;font-weight:600;font-size:clamp(32px,6vw,56px);line-height:1.15;color:var(--amber)}
+p{margin:0;color:var(--dim)}
+a{display:inline-flex;align-items:center;min-height:44px;padding:8px 20px;border-radius:999px;color:var(--fg);text-decoration:none;
+ position:relative;isolation:isolate}
+a::before{content:"";position:absolute;inset:0;z-index:-1;border-radius:inherit;background:rgba(0,0,0,.7);
+ mask-image:linear-gradient(to bottom,transparent,#000 8px,#000 calc(100% - 8px),transparent),linear-gradient(to right,transparent,#000 8px,#000 calc(100% - 8px),transparent);
+ mask-composite:intersect;-webkit-mask-composite:source-in}
+a::after{content:"";position:absolute;inset:-20px;z-index:-2;border-radius:inherit;pointer-events:none;
+ background:radial-gradient(closest-side,rgba(var(--glow),.2),transparent);filter:blur(12px)}
+a:focus-visible::after{background:radial-gradient(closest-side,rgba(var(--glow),.55),rgba(var(--glow),.22) 55%,transparent)}
+a:focus-visible{outline:none}
+</style>
+</head>
+<body>
+<main>
+<p class="eyebrow">404</p>
+<h1>THIS PAGE IS NOT HERE</h1>
+<p>The link may be out of date. The portfolio itself is one step away.</p>
+<a href="/">Back to the portfolio</a>
+</main>
+</body>
+</html>

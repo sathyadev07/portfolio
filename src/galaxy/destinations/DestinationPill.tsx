@@ -1,0 +1,6 @@
+import usePanelTilt from '../../hooks/usePanelTilt';
+import {ArrowUpRight} from 'lucide-react';
+import {WORK,PROJECTS,LOGOS,asset} from '../../data/portfolio';
+import type {OpenDetail} from '../../portfolio/PanelShell';
+export type PillProps={onOpen:OpenDetail;interactive:boolean};
+export default function DestinationPill({id,onOpen,interactive}:{id:string}&PillProps){const tilt=usePanelTilt();const logo=LOGOS[id as keyof typeof LOGOS];const item=[...WORK,...PROJECTS].find(x=>x.id===id);if(!item)return null;return <button type="button" className="destination-pill panel-tilt interactive-panel" {...tilt} data-od-id={`destination-${id}`} tabIndex={interactive?0:-1} disabled={!interactive} aria-haspopup="dialog" onClick={e=>onOpen(id,e.currentTarget)}><span className="destination-brand od-cluster">{logo&&<img className="destination-logo" src={asset(logo.src)} width={logo.width} height={logo.height} alt={logo.alt}/>}<span className="portfolio-eyebrow">{'company' in item?item.company:item.projNumber}</span></span><span className="destination-title">{item.title}</span><span className="portfolio-meta">{item.period} <ArrowUpRight size={18} strokeWidth={1.5} aria-hidden="true"/></span></button>;}

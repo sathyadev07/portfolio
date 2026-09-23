@@ -1,0 +1,121 @@
+/* Recruiter-first reading layout. All colors derive from the shared tokens. */
+html{scrollbar-gutter:stable}
+.portfolio-dialog-bar [data-od-id="close-detail"]{flex:none;min-width:160px;justify-content:center}
+.portfolio-skip{position:fixed;left:16px;top:8px;z-index:30;transform:translateY(-160%);padding:8px 16px;border-radius:var(--r-sm);background:var(--amber);color:var(--amber-ink);font-size:18px}
+.portfolio-skip:focus{transform:none}
+.portfolio-topbar{position:fixed;inset:0 0 auto;z-index:20;display:flex;align-items:center;gap:24px;padding:12px clamp(16px,4vw,40px);background:var(--panel);backdrop-filter:blur(12px);min-height:72px}
+.portfolio-brand{display:inline-flex;align-items:center;justify-content:center;min-height:44px;flex:none;font-family:var(--display);font-weight:var(--display-weight);font-size:24px;letter-spacing:.04em;color:var(--ink);text-decoration:none}
+.portfolio-nav{flex:1 1 auto;min-width:0}.portfolio-nav ul{list-style:none;margin:0;padding:0;gap:24px}.portfolio-nav a{display:inline-flex;align-items:center;min-height:44px;font-size:18px;color:var(--ink);text-decoration:none}
+.header-actions{margin-left:auto;display:flex;align-items:center;gap:16px;flex:none}.contact-controls{display:flex;align-items:center;gap:8px}
+.contact-control{display:flex;align-items:center;justify-content:center;width:44px;height:44px;flex:none;border:0;border-radius:var(--r-sm);background:transparent;color:var(--ink);transition:background var(--motion-enter);padding:8px}
+/* Gmail and phone ship real alpha, so flattening them to a white silhouette is
+   safe. The supplied LinkedIn asset does not: it is VP8L lossless with no alpha
+   chunk — an opaque black squircle carrying a white "in". `brightness(0)` made
+   every pixel black and `invert(.95)` then made every pixel white, which is why
+   it rendered as a solid white square. It keeps its own pixels and is composited
+   with `screen`, so the black tile drops out against the button at any
+   background, hover and focus included, and the white mark stays the same white
+   as its neighbours. */
+.contact-control img{width:26px;max-height:26px;object-fit:contain;filter:grayscale(1) brightness(0) invert(.95)}
+/* The phone glyph is a line icon from the same family as the dialog and card
+   icons, so it matches their 1.5px stroke instead of shipping a raster. */
+.contact-control svg{width:24px;height:24px;flex:none}
+.contact-control img[data-logo="linkedin"]{filter:none;mix-blend-mode:screen}
+.phone-control{position:relative}.phone-actions{position:absolute;top:calc(100% + 12px);right:0;width:224px;padding:16px;display:grid;gap:8px;border:0;border-radius:var(--r-sm);--glow-fill:var(--panel-solid);color:var(--ink)}
+.phone-actions{max-width:calc(100vw - 32px);transform-origin:0 0}.phone-actions p{margin:0}.phone-actions .portfolio-button{justify-content:center}.copy-status{display:block;font-size:16px;line-height:1.5;overflow-wrap:anywhere}
+.portfolio-toggle{display:flex;align-items:center;gap:8px;padding:8px 12px;min-height:44px;border:0;border-radius:var(--r-sm);background:transparent;color:var(--ink);font-size:18px;line-height:1.2;transition:background var(--motion-enter)}
+.toggle-state{display:block;font-family:var(--body);font-weight:var(--body-weight);font-size:14px;min-width:24px;text-align:center}.portfolio-toggle[aria-pressed="true"]{--glow-fill:var(--amber-surface);color:var(--amber-ink)}
+.portfolio-document{position:relative;z-index:2;width:min(1120px,100%);margin:0 auto;padding:0 clamp(16px,4vw,40px) 96px}
+/* No divider between sections; the vertical rhythm separates them. Padding is
+   unchanged from the bordered version so nothing shifts. */
+.portfolio-section{padding:clamp(64px,10vh,120px) 0;display:flex;flex-direction:column;gap:24px;scroll-margin-top:96px}
+.portfolio-hero{min-height:min(88dvh,800px);justify-content:center;padding-top:clamp(144px,18vh,200px)}
+.portfolio-eyebrow{margin:0;font-family:var(--body);font-size:16px;letter-spacing:.1em;text-transform:uppercase;color:var(--ink-dim)}
+.portfolio-display{margin:0;overflow-wrap:break-word;text-wrap:balance;font-family:var(--display);font-weight:var(--display-weight);letter-spacing:var(--heading-tracking);line-height:1.12;text-transform:uppercase;color:var(--ink)}
+/* The name is the only text sitting directly on the moving galaxy in both modes.
+   A stack of soft black shadows separates the glyphs from bright stars without an
+   outline, a panel, or a glow. No layer is offset, so nothing clips at the line
+   box when the name stacks on mobile. */
+.portfolio-hero .portfolio-display{font-size:clamp(40px,7.8vw,104px);text-shadow:var(--name-shadow)}.portfolio-section h2.portfolio-display{font-size:clamp(32px,4.5vw,56px)}.portfolio-section h3.portfolio-display{font-size:clamp(24px,2.5vw,32px)}
+
+/* The name is the one text run that is not Chillax. Declared after
+   .portfolio-display and .portfolio-brand so it wins on source order at equal
+   specificity, and carried by a class rather than an element selector so the
+   detail-dialog headings that share .portfolio-display keep the display face. */
+.portfolio-name{font-family:var(--name);font-weight:var(--name-weight)}
+.portfolio-meta{margin:0;font-family:var(--body);font-size:18px;color:var(--ink-dim)}.portfolio-prose{margin:0;max-width:70ch;font-size:20px;line-height:1.6;color:var(--ink-dim)}.portfolio-prose p{margin:0}.portfolio-prose p+p{margin-top:16px}
+.portfolio-button{display:inline-flex;align-items:center;justify-content:center;gap:8px;padding:8px 20px;min-height:44px;border:0;border-radius:var(--r-full);background:transparent;color:var(--ink);font-family:var(--body);font-size:18px;line-height:1.5;text-decoration:none;transition:background var(--motion-enter)}
+.portfolio-button.primary{--glow-fill:var(--amber-surface);color:var(--amber-ink)}.portfolio-button:disabled{opacity:.42}
+
+.portfolio-facts{margin:8px 0 0;padding:0;display:grid;gap:16px 32px;grid-template-columns:repeat(auto-fit,minmax(160px,1fr));max-width:960px}.portfolio-facts dt{font-size:16px;letter-spacing:.04em;text-transform:uppercase;color:var(--ink-dim)}.portfolio-facts dd{margin:0;font-size:20px;color:var(--ink)}
+.portfolio-tags{list-style:none;margin:0;padding:0;gap:8px}.portfolio-tags li{padding:4px 12px;border:0;border-radius:var(--r-full);font-size:16px;color:var(--ink-dim)}
+.portfolio-work-list,.portfolio-project-list{display:flex;flex-direction:column;gap:32px}
+/* Round 1 put content-visibility:auto here so offscreen cards skipped their
+   backdrop blur. It is gone: content-visibility implies paint containment, which
+   clips the card's own ::after — and the ::after is where the haze lives. A
+   clipped haze is a hard edge, which is the whole point of Task 4. The offscreen
+   blur cost comes back; the edge treatment is worth more. */
+/* .panel-surface is the box itself — border, radius, black translucent fill,
+   blur, tilt. .interactive-panel is a separate, additive concept meaning
+   "clicking this opens something", and it contributes nothing but the hover and
+   focus highlight. About is a .panel-surface and deliberately not an
+   .interactive-panel, so it reads as a panel without ever claiming to be a
+   button. Anything genuinely clickable carries both. */
+.panel-surface{border-radius:var(--r)}
+.portfolio-work,.portfolio-project{display:grid;grid-template-columns:104px minmax(0,1fr);gap:32px;align-items:start;padding:32px 48px 32px 32px;scroll-margin-top:104px}
+.portfolio-about{display:flex;flex-direction:column;gap:16px;padding:32px;scroll-margin-top:104px}
+.portfolio-about .portfolio-prose{max-width:74ch}
+.portfolio-work .od-stack,.portfolio-project .od-stack{--od-gap:12px}.portfolio-logo{width:100%;max-width:104px;height:auto;border-radius:var(--r-sm)}.portfolio-project-index{font-family:var(--body);font-weight:var(--body-weight);font-size:40px;color:var(--ink-dim);line-height:1.1}
+.panel-hit{position:absolute;inset:0;z-index:2;border:0;border-radius:inherit;background:transparent;color:var(--ink);padding:0}
+/* The stuck border. DetailShell restores focus to the source card on close,
+   which is correct for the keyboard and is exactly what lit :focus-within amber
+   and then left it lit until the next click elsewhere. :focus-visible only
+   matches when the browser judges the focus keyboard-driven, so a mouse
+   open/close no longer strands a highlight while keyboard users keep theirs. */
+.panel-hit:focus-visible{outline-offset:4px}.panel-arrow{position:absolute;right:20px;top:24px;color:var(--ink);font-size:24px;pointer-events:none}
+
+/* Viewport shell owns scrolling; all detail content stays in normal flow. */
+.portfolio-dialog{position:fixed;inset:0;width:100%;height:100dvh;max-width:none;max-height:none;margin:0;padding:0;border:0;border-radius:0;background:var(--panel-solid);color:var(--ink);overflow:clip}
+.portfolio-dialog::backdrop{background:var(--panel)}.portfolio-dialog-shell{display:grid;grid-template-rows:auto minmax(0,1fr) auto;height:100%;min-height:0}
+/* The dialog's sticky bars still need to read as separate from the content that
+   scrolls under them, but a full-width 1px rule is the hard edge everything else
+   just lost. This is light spill instead: a hairline of the glow colour that
+   fades to nothing at both ends, so it has no end you can point at. */
+.portfolio-dialog-bar{display:flex;align-items:center;gap:16px;justify-content:space-between;padding:12px max(16px,calc((100vw - 1040px)/2));border:0;min-height:72px;background-image:linear-gradient(to right,transparent,rgba(var(--glow-rgb),.16),transparent);background-size:100% 1px;background-position:bottom;background-repeat:no-repeat}
+.portfolio-dialog-shell>footer{background-position:top;padding-bottom:max(12px,env(safe-area-inset-bottom))}
+.portfolio-detail-body{overflow-y:auto;overscroll-behavior:contain;min-height:0;display:flex;flex-direction:column;padding:32px clamp(16px,4vw,40px) 48px}.detail-content{display:flex;flex-direction:column;gap:16px;width:min(100%,1040px);margin:auto;flex-shrink:0}
+.detail-head{display:grid;grid-template-columns:104px minmax(0,1fr);gap:32px;align-items:start}.detail-head .od-stack{--od-gap:12px}
+.portfolio-detail-body h2.portfolio-display{font-size:clamp(28px,4vw,48px)}.portfolio-detail-sub{margin:24px 0 0;font-family:var(--display);font-weight:var(--display-weight);font-size:24px;color:var(--ink)}
+.portfolio-bullets{margin:0;padding-left:24px;display:flex;flex-direction:column;gap:12px;max-width:74ch;color:var(--ink-dim);line-height:1.6}.portfolio-note{margin:8px 0 0;padding:24px 0}.portfolio-note h3{margin:0;font-size:24px}.portfolio-note ul{margin:12px 0 0;padding-left:24px;color:var(--ink-dim)}
+.portfolio-gallery{display:grid;gap:40px;grid-template-columns:repeat(2,minmax(0,1fr));align-items:start}.portfolio-gallery figure,.portfolio-videos figure{margin:0;display:flex;flex-direction:column;gap:8px;min-width:0}.portfolio-gallery a{display:block}.portfolio-gallery img{width:100%;height:auto;object-fit:contain;border:0;border-radius:var(--r-sm)}.portfolio-gallery figcaption,.portfolio-videos figcaption{font-size:16px;color:var(--ink-dim)}
+.portfolio-videos{display:grid;gap:24px;grid-template-columns:repeat(auto-fit,minmax(min(100%,280px),1fr));align-items:start}.portfolio-videos video{display:block;width:100%;height:auto;object-fit:contain;border:0;border-radius:var(--r-sm)}
+.video-poster{position:relative;display:block;width:100%;padding:0;border:0;border-radius:var(--r-sm);--glow-fill:var(--panel-solid);color:var(--ink)}.video-poster img{width:100%;height:auto;border-radius:inherit}.video-play{position:absolute;bottom:12px;left:12px;display:flex;align-items:center;gap:8px;max-width:calc(100% - 24px);padding:8px 12px;border:0;border-radius:var(--r-sm);--glow-fill:var(--panel-solid);color:var(--ink);font-size:16px}
+.portfolio-resume-frame{border-radius:var(--r-sm)}
+.portfolio-resume{display:block;width:100%;height:min(70dvh,720px);border:0;border-radius:inherit;background:var(--space-0)}
+@media(hover:hover) and (pointer:fine){.portfolio-nav a:hover{color:var(--ink);text-decoration:underline;text-underline-offset:5px}.contact-control:hover,.portfolio-toggle:hover,.portfolio-button:not(:disabled):hover{--glow-fill:var(--surface-hover);color:var(--ink)}.portfolio-toggle[aria-pressed="true"]:hover,.portfolio-button.primary:not(:disabled):hover{--glow-fill:var(--amber);color:var(--amber-ink)}}
+@media(max-width:1023px){.portfolio-nav{display:none}.portfolio-topbar{gap:16px}}
+@media(max-width:767px){.detail-head{grid-template-columns:minmax(0,1fr);gap:16px}.portfolio-work,.portfolio-project{grid-template-columns:minmax(0,1fr);gap:24px;padding:24px 40px 24px 24px}.portfolio-logo{max-width:72px}.portfolio-gallery{grid-template-columns:1fr}.portfolio-prose{font-size:20px;max-width:60ch}.portfolio-hero{min-height:88dvh}}
+/* Unbounded sets much wider than the text face, so DEVARAJAN
+   overruns a 320px line at the old 40px floor and breaks mid-word. One floor
+   step keeps the name on a single line down to the 320px min-width. */
+@media(max-width:479px){.portfolio-hero .portfolio-name{font-size:clamp(32px,9vw,40px)}.portfolio-topbar{gap:8px;padding:12px 12px}.header-actions{gap:8px}.portfolio-brand{font-size:22px}.portfolio-toggle{padding:8px;gap:4px;font-size:16px}.toggle-state{font-size:12px;min-width:20px}.portfolio-section{padding-block:64px}.portfolio-hero{padding-top:136px}.portfolio-dialog-bar>.portfolio-eyebrow{font-size:14px;letter-spacing:.04em}.portfolio-detail-body{padding-top:24px}.portfolio-facts{grid-template-columns:repeat(2,minmax(0,1fr));gap:16px}.portfolio-facts dd{overflow-wrap:anywhere}}
+@media(prefers-reduced-motion:reduce){.panel-surface,.panel-tilt{transform:none!important}}
+
+/* Accent and illumination preserve a dark separation edge under the glow. */
+.portfolio-section h2.portfolio-display,.portfolio-section h3.portfolio-display,.portfolio-detail-body h2.portfolio-display,.portfolio-detail-sub{color:var(--title-accent);text-shadow:var(--stellar-text)}
+.portfolio-hero .portfolio-display{ text-shadow:var(--name-shadow),var(--stellar-text) }
+
+.panel-surface,.panel-tilt{transform:perspective(var(--tilt-perspective)) rotateX(var(--tilt-x,0deg)) rotateY(var(--tilt-y,0deg));transition:transform var(--motion-enter) ease-out}
+@media(prefers-reduced-motion:reduce){.panel-surface{transform:none!important}}
+
+/* Document buttons (View Resume, View Portfolio PDF): surface alpha x0.8 in
+   every state, on the fill layer only — label, icon and focus ring keep full
+   opacity. Base: primary amber 80% -> 64%, secondary panel 70.4% -> 56.32%.
+   Hover: primary amber 100% -> 80%, secondary lift 80% -> 64%. The haze reads
+   the same fill, so it lightens with it. */
+.portfolio-button.doc-button{--glow-fill:color-mix(in oklch,var(--space-0) 56.32%,transparent)}
+.portfolio-button.doc-button.primary{--glow-fill:color-mix(in oklch,var(--amber) 64%,transparent)}
+@media(hover:hover) and (pointer:fine){
+ .portfolio-button.doc-button:not(:disabled):hover{--glow-fill:color-mix(in oklch,color-mix(in oklch,var(--ink) 8%,var(--space-0)) 64%,transparent)}
+ .portfolio-button.doc-button.primary:not(:disabled):hover{--glow-fill:color-mix(in oklch,var(--amber) 80%,transparent)}
+}

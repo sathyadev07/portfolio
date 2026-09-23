@@ -1,0 +1,1 @@
+export default function CoolStuffControl({enabled,onToggle}:{enabled:boolean;onToggle:()=>void}){return <button type="button" className="portfolio-toggle" data-od-id="cool-stuff-toggle" aria-label={`Cool Stuff ${enabled?'on':'off'}`} aria-pressed={enabled} onClick={onToggle}><span>Cool Stuff</span><span className="toggle-state">{enabled?'On':'Off'}</span></button>;}
