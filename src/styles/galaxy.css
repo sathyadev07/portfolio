@@ -1,4 +1,4 @@
-.galaxy-canvas{position:fixed;inset:0;z-index:0;overflow:hidden}.galaxy-canvas--background{pointer-events:none}.galaxy-canvas canvas{display:block}.galaxy-mode .galaxy-canvas{pointer-events:none}
+.galaxy-canvas{position:fixed;inset:0;z-index:0;overflow:hidden}.galaxy-canvas--background{pointer-events:none}.galaxy-canvas canvas{display:block}.galaxy-canvas--blackhole{background:#000;contain:strict}.galaxy-canvas--blackhole canvas{pointer-events:none}.galaxy-mode .galaxy-canvas{pointer-events:none}
 .galaxy-status{position:fixed;left:50%;bottom:24px;transform:translateX(-50%);z-index:6;margin:0;display:flex;align-items:center;gap:12px;padding:12px 16px;border:0;border-radius:var(--r-sm);--glow-fill:var(--panel);font-size:18px;color:var(--ink);max-width:calc(100vw - 32px)}.galaxy-status progress{inline-size:96px;block-size:4px;accent-color:var(--amber)}
 html.mode-galaxy,html.mode-galaxy body{overflow:hidden;height:100%}.galaxy-mode{position:relative;min-height:100dvh}
 

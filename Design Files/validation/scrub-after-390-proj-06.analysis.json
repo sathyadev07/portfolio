@@ -1,0 +1,87 @@
+{
+ "viewport": [
+  390,
+  844
+ ],
+ "card": "proj-06",
+ "open": {
+  "label": "open",
+  "samples": 239,
+  "multiVisible": 0,
+  "opacityDips": 0,
+  "minPrimaryOpacity": 1,
+  "jumps": [],
+  "jumpCount": 0,
+  "switches": []
+ },
+ "openT0DialogVsCardLine0": [
+  0,
+  -0.1,
+  -0.01,
+  0.19
+ ],
+ "openT0Lines": [
+  3,
+  3
+ ],
+ "close": {
+  "label": "close",
+  "samples": 239,
+  "multiVisible": 0,
+  "opacityDips": 0,
+  "minPrimaryOpacity": 1,
+  "jumps": [],
+  "jumpCount": 0,
+  "switches": []
+ },
+ "closeTitleTiming": {
+  "delay": 0,
+  "direction": "normal",
+  "duration": 332,
+  "easing": "cubic-bezier(0.71, 0, 1, 1)",
+  "endDelay": 143,
+  "fill": "both",
+  "iterationStart": 0,
+  "iterations": 1
+ },
+ "closeSpeed": {
+  "totalPx": 169.9,
+  "motionStartsMsAfterClick": 142,
+  "motionDurationMs": 333.00000000000006,
+  "initial": [
+   {
+    "firstMs": 4,
+    "pxPerMs": 1.2148,
+    "normSlope": 2.382
+   },
+   {
+    "firstMs": 8,
+    "pxPerMs": 1.3536,
+    "normSlope": 2.654
+   },
+   {
+    "firstMs": 16,
+    "pxPerMs": 1.3612,
+    "normSlope": 2.668
+   },
+   {
+    "firstMs": 33,
+    "pxPerMs": 1.2728,
+    "normSlope": 2.495
+   }
+  ]
+ },
+ "tail": {
+  "frames": 39,
+  "multiVisible": 0,
+  "noneVisible": 0,
+  "handoffLastDialogVsCardLine0": [
+   0,
+   -0.1,
+   -0.01,
+   0.19
+  ],
+  "lineCountCard": 3,
+  "lineCountDialogAtHandoff": 3
+ }
+}

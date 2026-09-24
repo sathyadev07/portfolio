@@ -30,7 +30,7 @@
    destination depends on: a fallback-then-swap would resize it mid-approach. */
 @font-face{font-family:'Chillax';src:url('/assets/fonts/Chillax-Medium.woff2') format('woff2');font-weight:400 700;font-style:normal;font-display:block;size-adjust:111%}
 @font-face{font-family:'Unbounded';src:url('/assets/fonts/unbounded-semibold.woff2') format('woff2');font-weight:600;font-style:normal;font-display:block}
-:root{color-scheme:dark;--space-0:#000000;--space-1:#000000;--panel:color-mix(in oklch,var(--space-0) 70.4%,transparent);--panel-solid:color-mix(in oklch,var(--space-0) 80%,transparent);--amber-surface:color-mix(in oklch,var(--amber) 80%,transparent);--surface-hover:color-mix(in oklch,color-mix(in oklch,var(--ink) 8%,var(--space-0)) 80%,transparent);--ink:#f2f5fa;--ink-dim:#b9c2d2;--muted:#9aa5b8;--line:color-mix(in oklch,var(--ink) 18%,transparent);--line-strong:color-mix(in oklch,var(--ink) 32%,transparent);--amber:#f5bf74;--amber-strong:var(--amber);--amber-ink:#2a1700;--amber-glow:color-mix(in oklch,var(--amber) 12%,transparent);--r:14px;--r-sm:10px;--r-full:999px;--display:'Chillax',system-ui,-apple-system,'Segoe UI',sans-serif;--body:'Chillax',system-ui,-apple-system,'Segoe UI',sans-serif;--mono:var(--body);--name:'Unbounded','Chillax',system-ui,-apple-system,'Segoe UI',sans-serif;--display-weight:700;--body-weight:400;--name-weight:600;--name-shadow:0 0 2px rgba(0,0,0,.92),0 0 10px rgba(0,0,0,.85),0 0 26px rgba(0,0,0,.72),0 0 56px rgba(0,0,0,.5);--name-tracking:.04em;--heading-tracking:.03em;--motion-enter:240ms;--motion-exit:160ms;font-family:var(--body);font-weight:var(--body-weight);color:var(--ink);background:var(--space-0);font-synthesis:none}
+:root{color-scheme:dark;--space-0:#030409;--space-1:#05060a;--white-hot:#fff4e6;--nebula-1:#071f44;--nebula-2:#113844;--nebula-3:#1b214a;--panel:color-mix(in oklch,var(--space-0) 70.4%,transparent);--panel-solid:color-mix(in oklch,var(--space-0) 80%,transparent);--amber-surface:color-mix(in oklch,var(--amber) 80%,transparent);--surface-hover:color-mix(in oklch,color-mix(in oklch,var(--ink) 8%,var(--space-0)) 80%,transparent);--ink:#f3f4f7;--ink-dim:#bdc4d0;--muted:#9ba4b4;--line:color-mix(in oklch,var(--ink) 18%,transparent);--line-strong:color-mix(in oklch,var(--ink) 32%,transparent);--amber:#ffb070;--amber-strong:#ff9a4a;--amber-ink:#2a1300;--amber-glow:color-mix(in oklch,var(--amber) 12%,transparent);--r:14px;--r-sm:10px;--r-full:999px;--display:'Chillax',system-ui,-apple-system,'Segoe UI',sans-serif;--body:'Chillax',system-ui,-apple-system,'Segoe UI',sans-serif;--mono:var(--body);--name:'Unbounded','Chillax',system-ui,-apple-system,'Segoe UI',sans-serif;--display-weight:700;--body-weight:400;--name-weight:600;--name-shadow:0 0 2px rgba(0,0,0,.92),0 0 10px rgba(0,0,0,.85),0 0 26px rgba(0,0,0,.72),0 0 56px rgba(0,0,0,.5);--name-tracking:.04em;--heading-tracking:.03em;--motion-enter:240ms;--motion-exit:160ms;font-family:var(--body);font-weight:var(--body-weight);color:var(--ink);background:var(--space-0);font-synthesis:none}
 *{box-sizing:border-box}html{scroll-behavior:smooth;scroll-padding-top:104px}body{margin:0;min-width:320px;font-size:20px;line-height:1.6}button,a,input{touch-action:manipulation}button{font:inherit;cursor:pointer}a{color:var(--amber)}button:focus-visible,a:focus-visible,select:focus-visible,input:focus-visible,[tabindex]:focus-visible{outline:2px solid var(--amber);outline-offset:4px}button:disabled{cursor:default}h1,h2,h3{font-family:var(--display);font-weight:var(--display-weight);letter-spacing:var(--heading-tracking);line-height:1.2}p{ text-wrap:pretty }h1,h2,h3{text-wrap:balance}img{display:block;max-width:100%;height:auto}button,a{-webkit-tap-highlight-color:transparent}::selection{background:var(--amber);color:var(--amber-ink)}
 .sr-only{position:absolute;width:1px;height:1px;padding:0;margin:-1px;overflow:hidden;clip:rect(0,0,0,0);white-space:nowrap;border:0}
 @media(prefers-reduced-motion:reduce){html{scroll-behavior:auto}*,*::before,*::after{animation-duration:.01ms!important;transition-duration:.01ms!important}}
@@ -53,15 +53,12 @@
 :root{
  /* containerMorph.ts reads this one duration for every open and close (detail
     dialogs, document viewers, phone menu); all its delays and staggers are
-    shares of it. 475ms = the previous 760ms at 1.6x playback speed. Hover,
-    tilt, scroll reveal and ambient motion do not read it. */
+    shares of it. 475ms = the previous 760ms at 1.6x playback speed. It is the
+    timeline length: opening plays it at 1.5x (316.7ms) and closing at 1.75x
+    (271.4ms) — see OPEN_RATE / CLOSE_RATE. Hover and tilt do not read it. */
  --anim-duration:475ms;
  --anim-ease:cubic-bezier(.22,1,.36,1);
- --reveal-distance:8px;
- --reveal-duration:300ms;
- --reveal-stagger:40ms;
- --reveal-ease:cubic-bezier(.22,1,.36,1);
- --glow-rgb:200,196,188;
+ --glow-rgb:255,212,168;
  /* Each radius tier is 1.5 times its previous value. */
  --glow-blur:24px;
  --haze-focus:rgba(var(--glow-rgb),.55);
@@ -104,13 +101,9 @@
 /* Label chips keep their complete pill fill without adding more haze. */
 .portfolio-tags li{position:relative;isolation:isolate;border:0;background:transparent}
 .portfolio-tags li::before{content:"";position:absolute;inset:0;z-index:-1;border-radius:inherit;background:var(--panel);pointer-events:none}
-/* Scroll reveal. The class ships in the markup and hooks/useReveal adds
-   .is-visible; the noscript override in index.html keeps everything visible if
-   the script never runs. */
-.reveal{opacity:0;transform:translateY(var(--reveal-distance));transition:opacity var(--reveal-duration) var(--reveal-ease),transform var(--reveal-duration) var(--reveal-ease);transition-delay:var(--reveal-delay,0ms)}
-.reveal.is-visible{opacity:1;transform:none}
+/* No scroll reveal: sections and cards are fully visible from first paint. */
 .tilt-panel{transform-style:preserve-3d}
-@media(prefers-reduced-motion:reduce){.reveal{opacity:1;transform:none;transition:none}.tilt-panel{transform:none!important}}
+@media(prefers-reduced-motion:reduce){.tilt-panel{transform:none!important}}
 
 /* Haze belongs to the outer frame. Media keeps every edge and its natural
    proportions; its radius follows the frame without masking image pixels. */

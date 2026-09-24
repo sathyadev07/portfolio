@@ -1,0 +1,165 @@
+{
+ "file": "morph-baseline-1440-sikorsky.json",
+ "frames": 39,
+ "multiVisibleFrames": 6,
+ "opacityDipFrames": 0,
+ "minPrimaryOpacity": 1,
+ "unexplainedJumps": [
+  {
+   "i": 7,
+   "phase": "open",
+   "from": "card",
+   "to": "dialog",
+   "delta": [
+    -32.51,
+    -304.9,
+    187.92
+   ],
+   "prevDelta": [
+    0,
+    0,
+    0
+   ],
+   "acc": 304.9
+  },
+  {
+   "i": 8,
+   "phase": "open",
+   "from": "dialog",
+   "to": "dialog",
+   "delta": [
+    -4.01,
+    -37.71,
+    23.19
+   ],
+   "prevDelta": [
+    -32.51,
+    -304.9,
+    187.92
+   ],
+   "acc": 267.19
+  },
+  {
+   "i": 9,
+   "phase": "open",
+   "from": "dialog",
+   "to": "dialog",
+   "delta": [
+    -1.83,
+    -17.14,
+    10.54
+   ],
+   "prevDelta": [
+    -4.01,
+    -37.71,
+    23.19
+   ],
+   "acc": 20.57
+  },
+  {
+   "i": 10,
+   "phase": "open",
+   "from": "dialog",
+   "to": "dialog",
+   "delta": [
+    -0.92,
+    -8.67,
+    5.33
+   ],
+   "prevDelta": [
+    -1.83,
+    -17.14,
+    10.54
+   ],
+   "acc": 8.47
+  },
+  {
+   "i": 11,
+   "phase": "open",
+   "from": "dialog",
+   "to": "dialog",
+   "delta": [
+    -0.24,
+    -2.23,
+    1.37
+   ],
+   "prevDelta": [
+    -0.92,
+    -8.67,
+    5.33
+   ],
+   "acc": 6.44
+  },
+  {
+   "i": 23,
+   "phase": "close",
+   "from": "dialog",
+   "to": "dialog",
+   "delta": [
+    4.58,
+    43.12,
+    -26.52
+   ],
+   "prevDelta": [
+    0,
+    0,
+    0
+   ],
+   "acc": 43.12
+  },
+  {
+   "i": 24,
+   "phase": "close",
+   "from": "dialog",
+   "to": "dialog",
+   "delta": [
+    8.88,
+    83.4,
+    -51.29
+   ],
+   "prevDelta": [
+    4.58,
+    43.12,
+    -26.52
+   ],
+   "acc": 40.28
+  },
+  {
+   "i": 25,
+   "phase": "close",
+   "from": "dialog",
+   "to": "dialog",
+   "delta": [
+    10.26,
+    96.41,
+    -59.29
+   ],
+   "prevDelta": [
+    8.88,
+    83.4,
+    -51.29
+   ],
+   "acc": 13.01
+  },
+  {
+   "i": 26,
+   "phase": "close",
+   "from": "dialog",
+   "to": "dialog",
+   "delta": [
+    6.42,
+    60.34,
+    -37.11
+   ],
+   "prevDelta": [
+    10.26,
+    96.41,
+    -59.29
+   ],
+   "acc": 36.07
+  },
+  {
+   "i": 27,
+   "phase": "close",
+   "from": "dialog",
+   

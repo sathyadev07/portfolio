@@ -1,0 +1,122 @@
+{
+ "viewport": [
+  1440,
+  900
+ ],
+ "card": "sikorsky",
+ "open": {
+  "label": "open",
+  "samples": 239,
+  "multiVisible": 0,
+  "opacityDips": 0,
+  "minPrimaryOpacity": 1,
+  "jumps": [
+   {
+    "i": 9,
+    "ms": 18,
+    "acc": 2.35,
+    "dl": [
+     -0.49,
+     -4.63,
+     2.36,
+     -4.34
+    ]
+   }
+  ],
+  "jumpCount": 1,
+  "switches": []
+ },
+ "openT0DialogVsCardLine0": [
+  0,
+  0.22,
+  -0.01,
+  -0.45
+ ],
+ "openT0Lines": [
+  1,
+  1
+ ],
+ "close": {
+  "label": "close",
+  "samples": 239,
+  "multiVisible": 0,
+  "opacityDips": 0,
+  "minPrimaryOpacity": 1,
+  "jumps": [
+   {
+    "i": 72,
+    "ms": 331.00000000000006,
+    "acc": 3.69,
+    "dl": [
+     0.39,
+     3.69,
+     -1.88,
+     3.46
+    ]
+   },
+   {
+    "i": 73,
+    "ms": 329.00000000000006,
+    "acc": 3.28,
+    "dl": [
+     0.74,
+     6.97,
+     -3.55,
+     6.54
+    ]
+   }
+  ],
+  "jumpCount": 2,
+  "switches": []
+ },
+ "closeTitleTiming": {
+  "delay": 0,
+  "direction": "normal",
+  "duration": 332,
+  "easing": "cubic-bezier(0.71, 0, 1, 1)",
+  "endDelay": 143,
+  "fill": "both",
+  "iterationStart": 0,
+  "iterations": 1
+ },
+ "closeSpeed": {
+  "totalPx": 374.4,
+  "motionStartsMsAfterClick": 142,
+  "motionDurationMs": 333.00000000000006,
+  "initial": [
+   {
+    "firstMs": 4,
+    "pxPerMs": 2.6799,
+    "normSlope": 2.383
+   },
+   {
+    "firstMs": 8,
+    "pxPerMs": 2.9855,
+    "normSlope": 2.655
+   },
+   {
+    "firstMs": 16,
+    "pxPerMs": 3.0006,
+    "normSlope": 2.669
+   },
+   {
+    "firstMs": 33,
+    "pxPerMs": 2.8061,
+    "normSlope": 2.496
+   }
+  ]
+ },
+ "tail": {
+  "frames": 39,
+  "multiVisible": 0,
+  "noneVisible": 0,
+  "handoffLastDialogVsCardLine0": [
+   0,
+   0.22,
+   -0.01,
+   -0.45
+  ],
+  "lineCountCard": 1,
+  "lineCountDialogAtHandoff": 1
+ }
+}

@@ -1,26 +1,10 @@
 import {DESTINATIONS} from './waypoints';
 
-/* The one galaxy coordinate system.
- *
- * `GalaxyCloud` clones the GLB point geometry, centres it, and renders it under a
- * single `scale={GALAXY_SCALE}` group with no rotation. So world space *is* the
- * point cloud's own space scaled by GALAXY_SCALE: the disc lies in world XY and
- * world +Z is the disc normal. Every number below is in those world units and
- * comes from the measurements recorded in GALAXY-GEOMETRY.md. There is no second
- * coordinate array anywhere else in the app.
- */
-export const GALAXY_SCALE = 0.05;
-
-/** World radius holding ~90% of the stars (local p90 112.2 x GALAXY_SCALE). */
-export const DISC_RADIUS = 5.61;
-/** World RMS half-thickness of the disc (local 15.0 x GALAXY_SCALE). */
-export const DISC_HALF_THICKNESS = 0.75;
-
-/* The name is outside the measured cloud (world |z| <= 6.03).
- * All remaining anchors retain their original positions inside the disc.
- * Route guides approach the name along its inward radial sightline. */
+/* The existing journey route stays in world space while the supplied black hole
+ * is uniformly fitted to a ten-unit footprint. The name begins outside it;
+ * the remaining anchors retain their established positions around its ring. */
 const POSITIONS: [number, number, number][] = [
-  [ 0.0000, -9.0000, 10.0000], // exterior name; galaxy center behind it
+  [ 0.0000, -9.0000, 10.0000], // exterior name; black hole center behind it
   [-2.7851, -1.9502,  0.3500], // 1  theta 215deg, r 3.4
   [ 3.2909, -1.9000, -0.3000], // 2  theta 330deg, r 3.8
   [ 0.3573,  4.0844,  0.4500], // 3  theta  85deg, r 4.1

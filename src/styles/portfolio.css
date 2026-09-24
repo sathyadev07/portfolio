@@ -3,7 +3,13 @@ html{scrollbar-gutter:stable}
 .portfolio-dialog-bar [data-od-id="close-detail"]{flex:none;min-width:160px;justify-content:center}
 .portfolio-skip{position:fixed;left:16px;top:8px;z-index:30;transform:translateY(-160%);padding:8px 16px;border-radius:var(--r-sm);background:var(--amber);color:var(--amber-ink);font-size:18px}
 .portfolio-skip:focus{transform:none}
-.portfolio-topbar{position:fixed;inset:0 0 auto;z-index:20;display:flex;align-items:center;gap:24px;padding:12px clamp(16px,4vw,40px);background:var(--panel);backdrop-filter:blur(12px);min-height:72px}
+.portfolio-topbar{position:fixed;inset:0 0 auto;z-index:20;display:flex;align-items:center;gap:24px;padding:12px clamp(16px,4vw,40px);isolation:isolate;min-height:72px}
+/* The bar's glass is painted by a pseudo-element, not the header itself. An
+   element with backdrop-filter is the backdrop root for everything inside it,
+   so the phone menu, which hangs below the bar, could only blur the bar's own
+   72px and showed the page's text sharp through its fill. On a sibling layer
+   the header is no longer a backdrop root and the menu blurs the real page. */
+.portfolio-topbar::before{content:"";position:absolute;inset:0;z-index:-1;background:var(--panel);backdrop-filter:blur(12px);pointer-events:none}
 .portfolio-brand{display:inline-flex;align-items:center;justify-content:center;min-height:44px;flex:none;font-family:var(--display);font-weight:var(--display-weight);font-size:24px;letter-spacing:.04em;color:var(--ink);text-decoration:none}
 .portfolio-nav{flex:1 1 auto;min-width:0}.portfolio-nav ul{list-style:none;margin:0;padding:0;gap:24px}.portfolio-nav a{display:inline-flex;align-items:center;min-height:44px;font-size:18px;color:var(--ink);text-decoration:none}
 .header-actions{margin-left:auto;display:flex;align-items:center;gap:16px;flex:none}.contact-controls{display:flex;align-items:center;gap:8px}
@@ -22,6 +28,18 @@ html{scrollbar-gutter:stable}
 .contact-control svg{width:24px;height:24px;flex:none}
 .contact-control img[data-logo="linkedin"]{filter:none;mix-blend-mode:screen}
 .phone-control{position:relative}.phone-actions{position:absolute;top:calc(100% + 12px);right:0;width:224px;padding:16px;display:grid;gap:8px;border:0;border-radius:var(--r-sm);--glow-fill:var(--panel-solid);color:var(--ink)}
+/* The phone menu must be out of flow. tokens.css loads after this file and its
+   shared glow rule (.glow-box, …, .phone-actions {position:relative}) has the
+   same specificity, so it won: the 224x168 menu was laid out inside the
+   flex header, which grew from 72px to 236px, re-centred every item, and
+   pushed the phone button itself 170px left while the menu animated. The
+   extra class wins without depending on stylesheet order. */
+.phone-control>.phone-actions{position:absolute}
+/* The phone button paints above its own menu. While the menu grows out of the
+   button or collapses back into it, their boxes overlap; with the button on
+   top, only the button (its glass and icon) is ever visible over the button's
+   area — never the menu's fill or text. */
+.phone-control>.contact-control{z-index:1}
 .phone-actions{max-width:calc(100vw - 32px);transform-origin:0 0}.phone-actions p{margin:0}.phone-actions .portfolio-button{justify-content:center}.copy-status{display:block;font-size:16px;line-height:1.5;overflow-wrap:anywhere}
 .portfolio-toggle{display:flex;align-items:center;gap:8px;padding:8px 12px;min-height:44px;border:0;border-radius:var(--r-sm);background:transparent;color:var(--ink);font-size:18px;line-height:1.2;transition:background var(--motion-enter)}
 .toggle-state{display:block;font-family:var(--body);font-weight:var(--body-weight);font-size:14px;min-width:24px;text-align:center}.portfolio-toggle[aria-pressed="true"]{--glow-fill:var(--amber-surface);color:var(--amber-ink)}
@@ -29,6 +47,9 @@ html{scrollbar-gutter:stable}
 /* No divider between sections; the vertical rhythm separates them. Padding is
    unchanged from the bordered version so nothing shifts. */
 .portfolio-section{padding:clamp(64px,10vh,120px) 0;display:flex;flex-direction:column;gap:24px;scroll-margin-top:96px}
+/* 40px of extra space above About. About, Work Experience and Projects all
+   move down together; the hero above is unchanged. */
+.portfolio-hero+#about{margin-top:40px}
 .portfolio-hero{min-height:min(88dvh,800px);justify-content:center;padding-top:clamp(144px,18vh,200px)}
 .portfolio-eyebrow{margin:0;font-family:var(--body);font-size:16px;letter-spacing:.1em;text-transform:uppercase;color:var(--ink-dim)}
 .portfolio-display{margin:0;overflow-wrap:break-word;text-wrap:balance;font-family:var(--display);font-weight:var(--display-weight);letter-spacing:var(--heading-tracking);line-height:1.12;text-transform:uppercase;color:var(--ink)}
@@ -75,7 +96,10 @@ html{scrollbar-gutter:stable}
 .panel-hit:focus-visible{outline-offset:4px}.panel-arrow{position:absolute;right:20px;top:24px;color:var(--ink);font-size:24px;pointer-events:none}
 
 /* Viewport shell owns scrolling; all detail content stays in normal flow. */
-.portfolio-dialog{position:fixed;inset:0;width:100%;height:100dvh;max-width:none;max-height:none;margin:0;padding:0;border:0;border-radius:0;background:var(--panel-solid);color:var(--ink);overflow:clip}
+.portfolio-dialog{position:fixed;inset:0;width:100%;height:100dvh;max-width:none;max-height:none;margin:0;padding:0;border:0;border-radius:0;background:transparent;color:var(--ink);overflow:clip;isolation:isolate}
+/* The dialog's fill lives on its own layer so the container morph can fade the
+   surface without fading the shared title that rides on top of it. */
+.portfolio-dialog::before{content:"";position:absolute;inset:0;z-index:-1;background:var(--panel-solid);pointer-events:none}
 .portfolio-dialog::backdrop{background:var(--panel)}.portfolio-dialog-shell{display:grid;grid-template-rows:auto minmax(0,1fr) auto;height:100%;min-height:0}
 /* The dialog's sticky bars still need to read as separate from the content that
    scrolls under them, but a full-width 1px rule is the hard edge everything else
@@ -104,9 +128,19 @@ html{scrollbar-gutter:stable}
 /* Accent and illumination preserve a dark separation edge under the glow. */
 .portfolio-section h2.portfolio-display,.portfolio-section h3.portfolio-display,.portfolio-detail-body h2.portfolio-display,.portfolio-detail-sub{color:var(--title-accent);text-shadow:var(--stellar-text)}
 .portfolio-hero .portfolio-display{ text-shadow:var(--name-shadow),var(--stellar-text) }
+/* The morphing title is one element scaled between the card and the dialog, so
+   its glow must scale with the glyphs: --stellar-text's 16px/32px radii would
+   shrink with the transform and then snap back at the hand-over. In em, both
+   copies carry the same glow at the same pose. Equal to --stellar-text at the
+   32px desktop card size. */
+.portfolio-section h3.portfolio-display[data-morph="title"],.portfolio-detail-body h2.portfolio-display[data-morph="title"]{text-shadow:0 0 .5em var(--star-warm),0 0 1em var(--star-cool)}
 
 .panel-surface,.panel-tilt{transform:perspective(var(--tilt-perspective)) rotateX(var(--tilt-x,0deg)) rotateY(var(--tilt-y,0deg));transition:transform var(--motion-enter) ease-out}
 @media(prefers-reduced-motion:reduce){.panel-surface{transform:none!important}}
+
+.model-credit{width:min(100% - 48px,1040px);margin:0 auto;padding:24px 0 40px;color:var(--ink-dim);font-size:16px;line-height:1.5}
+.model-credit a{color:var(--ink);text-underline-offset:3px}
+.model-credit a:focus-visible{outline:2px solid var(--amber);outline-offset:4px}
 
 /* Document buttons (View Resume, View Portfolio PDF): surface alpha x0.8 in
    every state, on the fill layer only — label, icon and focus ring keep full

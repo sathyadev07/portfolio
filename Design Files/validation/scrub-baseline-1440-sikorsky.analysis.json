@@ -1,0 +1,147 @@
+{
+ "viewport": [
+  1440,
+  900
+ ],
+ "card": "sikorsky",
+ "open": {
+  "label": "open",
+  "samples": 239,
+  "multiVisible": 73,
+  "opacityDips": 8,
+  "minPrimaryOpacity": 0.9725,
+  "jumps": [
+   {
+    "i": 64,
+    "ms": 128,
+    "acc": 271.72,
+    "dl": [
+     -29.62,
+     -271.72,
+     141.57,
+     -254.91
+    ]
+   },
+   {
+    "i": 65,
+    "ms": 130,
+    "acc": 269.14,
+    "dl": [
+     -0.28,
+     -2.58,
+     1.34,
+     -2.42
+    ]
+   }
+  ],
+  "jumpCount": 2,
+  "switches": [
+   {
+    "i": 64,
+    "ms": 128,
+    "from": "card",
+    "to": "dialog"
+   }
+  ]
+ },
+ "openT0DialogVsCardLine0": [
+  0,
+  0.66,
+  -0.01,
+  -0.45
+ ],
+ "openT0Lines": [
+  1,
+  1
+ ],
+ "close": {
+  "label": "close",
+  "samples": 239,
+  "multiVisible": 73,
+  "opacityDips": 8,
+  "minPrimaryOpacity": 0.9707,
+  "jumps": [
+   {
+    "i": 175,
+    "ms": 125.00000000000006,
+    "acc": 69.85,
+    "dl": [
+     7.88,
+     71.85,
+     -37.69,
+     67.7
+    ]
+   },
+   {
+    "i": 176,
+    "ms": 123.00000000000006,
+    "acc": 71.85,
+    "dl": [
+     0,
+     0,
+     0,
+     0
+    ]
+   }
+  ],
+  "jumpCount": 2,
+  "switches": [
+   {
+    "i": 175,
+    "ms": 125.00000000000006,
+    "from": "dialog",
+    "to": "card"
+   }
+  ]
+ },
+ "closeTitleTiming": {
+  "delay": 0,
+  "direction": "normal",
+  "duration": 332,
+  "easing": "cubic-bezier(0.42, 0, 1, 1)",
+  "endDelay": 143,
+  "fill": "both",
+  "iterationStart": 0,
+  "iterations": 1
+ },
+ "closeSpeed": {
+  "totalPx": 366.9,
+  "motionStartsMsAfterClick": 142,
+  "motionDurationMs": 333.00000000000006,
+  "initial": [
+   {
+    "firstMs": 4,
+    "pxPerMs": 1.403,
+    "normSlope": 1.273
+   },
+   {
+    "firstMs": 8,
+    "pxPerMs": 1.6195,
+    "normSlope": 1.47
+   },
+   {
+    "firstMs": 16,
+    "pxPerMs": 1.7087,
+    "normSlope": 1.551
+   },
+   {
+    "firstMs": 33,
+    "pxPerMs": 1.723,
+    "normSlope": 1.564
+   }
+  ]
+ },
+ "tail": {
+  "frames": 20,
+  "multiVisible": 2,
+  "noneVisible": 0,
+  "handoffLastDialogVsCardLine0": [
+   0,
+   0.66,
+   -0.01,
+   -0.45
+  ],
+  "lineCountCard": 1,
+  "lineCountDialogAtHandoff": 1
+ }
+}

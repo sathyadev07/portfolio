@@ -11,7 +11,6 @@ scripts/
 
 # Backup archives and raw assets not used by the live site
 *.zip
-*.glb
 image.png
 image-*.png
 Image-2.html

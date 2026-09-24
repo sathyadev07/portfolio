@@ -18,12 +18,12 @@ export function useMediaQuery(query: string) {
 class SceneBoundary extends Component<{children:ReactNode}, {failed:boolean}> {
   state = { failed:false };
   static getDerivedStateFromError() { return { failed:true }; }
-  render() { return this.state.failed ? <p className="galaxy-status" role="status">Galaxy unavailable. All portfolio content and navigation remain available.</p> : this.props.children; }
+  render() { return this.state.failed ? <p className="galaxy-status" role="status">Black hole unavailable. All portfolio content and navigation remain available.</p> : this.props.children; }
 }
 function LoadStatus() {
   const {active,progress} = useProgress();
   if (!active) return null;
-  return <div className="galaxy-status" role="status"><span>Loading galaxy</span><progress aria-label="Galaxy loading" max="100" value={progress}/></div>;
+  return <div className="galaxy-status" role="status"><span>Loading black hole</span><progress aria-label="Black hole loading" max="100" value={progress}/></div>;
 }
 function ContextStatus({ onLost }: { onLost: (lost: boolean) => void }) {
   const gl = useThree(state => state.gl);
