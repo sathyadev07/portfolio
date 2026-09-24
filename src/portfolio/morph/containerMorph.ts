@@ -240,8 +240,24 @@ export function buildMorph(host:HTMLElement,source:SourceGeometry|null,options:{
     const current=time(),target=open?MORPH_MS:0;
     if(!animations.length||reducedMotion()||current===target){instantTime=target;hint(false);for(const a of animations){a.pause();a.currentTime=target}return ticket===serial&&!disposed}
     if(current===0||current===MORPH_MS)for(const [a,t] of timings)a.effect?.updateTiming(open?t.open:t.close);
-    const rate=open?OPEN_RATE:-CLOSE_RATE,now=Number(document.timeline.currentTime??performance.now());
     hint(true);
+    /* An opening from rest starts its clock only after the first frame that
+       actually contains the new content has been produced. Mounting a heavy
+       detail (dozens of nodes, images, fonts) makes that frame's style,
+       layout and paint long on a phone; with the clock already running, most
+       of the morph elapsed during that one frame and the box appeared to snap
+       open. Held at t=0 the host is clipped exactly to its source, so waiting
+       two frames is invisible, and every later frame advances by one frame's
+       worth of motion instead of the length of the stall. A close from the
+       settled state does the same: the state change that starts it (inert
+       body, paused 3D viewers) re-renders React in that first frame, and the
+       exit fade would otherwise skip its opening stretch. */
+    if((open&&current===0)||(!open&&current===MORPH_MS)){
+      for(const a of animations){a.pause();a.currentTime=current}
+      await new Promise<void>(resolve=>requestAnimationFrame(()=>requestAnimationFrame(()=>resolve())));
+      if(ticket!==serial||disposed)return false;
+    }
+    const rate=open?OPEN_RATE:-CLOSE_RATE,now=Number(document.timeline.currentTime??performance.now());
     // One start time for every effect, so the whole choreography shares one clock.
     for(const a of animations){a.playbackRate=rate;a.currentTime=current;a.play();a.startTime=now-current/rate}
     await Promise.all(animations.map(a=>a.finished.catch(()=>undefined)));

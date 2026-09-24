@@ -35,7 +35,7 @@ export default function DetailShell({children,onClose,origin,entryId,footer}:{ch
     idempotent rather than ignored. */
  const drive=useCallback((open:boolean)=>{
   // Before anything else, so the background is live for the close's first frame.
-  if(!open)uncover();
+  if(!open){uncover();if(dialog.current)delete dialog.current.dataset.settled}
   desired.current=open;setClosing(!open);
   /* The destination geometry was measured when the detail opened. After the
      body scrolls, the title's layout box has moved but its keyframes have not,
@@ -65,7 +65,11 @@ export default function DetailShell({children,onClose,origin,entryId,footer}:{ch
    if(!valid||!alive.current)return;
    /* `valid` means this play was not superseded, so an open resolving here has
       reached its final frame: the clip is the full dialog. */
-   if(desired.current){if(dialog.current)markCovering(dialog.current)}
+   /* data-settled tells heavy children (the 3D viewers) that the morph is
+      over: they start their renderers only now, so WebGL setup, model
+      loading and shader compiles never land inside an animation frame. It is
+      removed at the start of a close, which pauses them for the close. */
+   if(desired.current){if(dialog.current){dialog.current.dataset.settled='true';markCovering(dialog.current)}}
    else finish.current();
   });
  },[]);
