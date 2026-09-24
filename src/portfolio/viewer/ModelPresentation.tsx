@@ -2,6 +2,7 @@ import {useEffect,useMemo,useRef,type ComponentRef} from 'react';
 import {useThree} from '@react-three/fiber';
 import {OrbitControls,useGLTF} from '@react-three/drei';
 import {Box3,Vector3,Color,type Group,type Mesh,type Material,type MeshStandardMaterial} from 'three';
+import {asset} from '../../data/portfolio';
 export type Orientation = { rotation: [number, number, number]; azimuth: number; elevation: number; frame: number };
 
 /* Framing solved against the part's real silhouette at its authored angle: the
@@ -29,7 +30,7 @@ function fitDistance(box: Box3, fov: number, aspect: number, orientation: Orient
 }
 
 export default function Model({ url, orientation, controls, resetVersion }: { url: string; orientation: Orientation; controls: { current: ComponentRef<typeof OrbitControls> | null }; resetVersion: number }) {
-  const { scene } = useGLTF(url);
+  const { scene } = useGLTF(url, asset('assets/decoders/draco/'));
   const pivot = useRef<Group>(null);
   const camera = useThree(state => state.camera);
   const aspect = useThree(state => state.size.width / state.size.height);

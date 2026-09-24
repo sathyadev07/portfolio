@@ -395,14 +395,16 @@ export const MEDIA = {
 
 export const MODELS = {
   "sikorsky": null,
+  // Both CAD GLBs are Z-up. Turn +Z vertical and +Y toward screen-right,
+  // then view from the hub side so the brackets and caliper match the reference.
   "fsae": {
     "label": "Rear upright",
-    "model": "assets/models/DT27_Rear_Upright.gltf",
+    "model": "assets/models/DT27_Rear_Upright.glb",
     "orientation": {
       "rotation": [
+        -1.5707963267948966,
         0,
-        0,
-        0
+        -1.5707963267948966
       ],
       "azimuth": 0.6108652381980153,
       "elevation": 0.2617993877991494,
@@ -410,16 +412,16 @@ export const MODELS = {
     }
   },
   "fsae-assembly": {
-    "label": "Full drivetrain assembly",
-    "model": "assets/models/Drivetrain27_Asy.gltf",
+    "label": "Rear assembly",
+    "model": "assets/models/DT27_Rear_Asy.glb",
     "orientation": {
       "rotation": [
+        -1.5707963267948966,
         0,
-        0,
-        1.5707963267948966
+        -1.5707963267948966
       ],
-      "azimuth": -0.3490658503988659,
-      "elevation": 0.20943951023931956,
+      "azimuth": 0.6108652381980153,
+      "elevation": 0.2617993877991494,
       "frame": 1.12
     }
   },

@@ -1,20 +1,20 @@
 # CAD model sources
 
-The active glTF models and their binary dependencies were localized from
+The original glTF models and their binary dependencies were localized from
 https://sathyadev07.github.io/sathya-devarajan-portfolio/assets/models/
 on 2026-09-12. `source/model-map.js` records the assignments and presentation
 angles from the original page. Earlier renamed input files are preserved.
 
 | Active file | Destination | Binary dependency |
 | --- | --- | --- |
-| `DT27_Rear_Upright.gltf` | Rear upright | `DT27_Rear_Upright0.bin` |
-| `Drivetrain27_Asy.gltf` | Full drivetrain assembly | `Drivetrain27_Asy0.bin` |
+| `DT27_Rear_Upright.glb` | Rear upright | Embedded |
+| `DT27_Rear_Asy.glb` | Rear assembly | Embedded |
 | `ebike-top-level-assembly.gltf` | Custom Electric Bike | `ebike-top-level-assembly0.bin` |
 | `BabaWoodSurface.gltf` | Complex Surface Topography | `BabaWoodSurface0.bin` |
 
 Maintenance notes:
 
-- Keep each glTF file beside its binary dependency. Preserve its original units.
+- Keep each remaining glTF file beside its binary dependency. GLB files embed theirs. Preserve original units.
 - The Draco loader and decoders are local in `assets/vendor/`, from Three.js r125,
   matching the existing renderer and GLTFLoader.
 - Do **not** pre-rotate or pre-scale the asset. The viewer centres it, applies a
