@@ -1,4 +1,5 @@
 import {useCallback,useEffect,useRef} from 'react';
+import {PANEL_TILT_ENABLED} from '../features';
 /* Pointer tilt for a media panel. transform only, one rAF per frame, and the
    listeners live on the element rather than the document.
    It yields in three situations the brief calls out: a coarse pointer or
@@ -6,7 +7,7 @@ import {useCallback,useEffect,useRef} from 'react';
    suspends it so a drag reaches OrbitControls instead of fighting it; and
    will-change is set on enter and dropped on leave rather than left standing. */
 const MAX=7;
-export default function useTilt(){
+function useTiltLive(){
  const frame=useRef(0),pose=useRef({rx:0,ry:0}),node=useRef<HTMLElement|null>(null),held=useRef(false);
  const allowed=()=>matchMedia('(hover:hover) and (pointer:fine)').matches
   &&!matchMedia('(prefers-reduced-motion:reduce)').matches;
@@ -44,3 +45,12 @@ export default function useTilt(){
   onPointerCancel:flatten,
  };
 }
+type TiltProps=Partial<ReturnType<typeof useTiltLive>>;
+/* Tilt off: no handlers, no ref, no rAF, no inline styles. One frozen object,
+   so spreading it adds nothing to the element and never changes identity. */
+const NO_TILT:TiltProps=Object.freeze({});
+function useTiltOff():TiltProps{return NO_TILT}
+/* Picked once at module load from a constant, so the hook order a component
+   sees never changes between renders. */
+const useTilt:()=>TiltProps=PANEL_TILT_ENABLED?useTiltLive:useTiltOff;
+export default useTilt;

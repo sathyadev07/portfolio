@@ -31,7 +31,13 @@ export default function WebGPUBlackHole({reducedMotion = false}: {reducedMotion?
         if (!active || !import.meta.env.DEV) return;
         const backend = (instance.renderer as unknown as {backend?: {isWebGPUBackend?: boolean}}).backend;
         console.info(`[black hole] backend: ${backend?.isWebGPUBackend ? 'WebGPU' : 'WebGL2 fallback'}`);
-        (window as unknown as {__bh?: unknown}).__bh = {camera: instance.camera, controls: instance.controls, renderer: instance.renderer, uniforms: instance.uniforms, scrollState: instance.scrollState};
+        const adaptive = instance.adaptive;
+        (window as unknown as {__bh?: unknown}).__bh = {
+          camera: instance.camera, controls: instance.controls, renderer: instance.renderer,
+          uniforms: instance.uniforms, scrollState: instance.scrollState,
+          adaptive, isRendering: instance.isRendering,
+          get renderScale() { return adaptive.scale; }
+        };
       });
     }).catch(fail);
     return () => {

@@ -102,7 +102,8 @@
 .portfolio-tags li{position:relative;isolation:isolate;border:0;background:transparent}
 .portfolio-tags li::before{content:"";position:absolute;inset:0;z-index:-1;border-radius:inherit;background:var(--panel);pointer-events:none}
 /* No scroll reveal: sections and cards are fully visible from first paint. */
-.tilt-panel{transform-style:preserve-3d}
+/* Tilt only (see PANEL_TILT_ENABLED): preserve-3d with no tilt is a flattening group for nothing. */
+:root[data-panel-tilt] .tilt-panel{transform-style:preserve-3d}
 @media(prefers-reduced-motion:reduce){.tilt-panel{transform:none!important}}
 
 /* Haze belongs to the outer frame. Media keeps every edge and its natural

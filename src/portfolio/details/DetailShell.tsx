@@ -4,6 +4,20 @@ import Button from '../../components/Button';
 import {buildMorph,morphMs,readSource,type Morph,type SourceGeometry} from '../morph/containerMorph';
 import {isKeyboardModality} from '../morph/inputModality';
 
+/* Pause handshake for the background renderer. The root carries
+   data-detail-covering="true" only while the detail dialog, settled at the end
+   of its open morph, covers the whole viewport: nothing behind it needs a new
+   frame then. It is cleared synchronously at the start of a close (before the
+   close's first frame), and on unmount. Previous/Next never clears it. */
+const uncover=()=>{delete document.documentElement.dataset.detailCovering};
+function markCovering(el:HTMLDialogElement){
+ /* The root's own box, not clientWidth: with scrollbar-gutter:stable and the
+    page scroll-locked, clientWidth includes the empty gutter while the dialog
+    and the fixed background both stop at the gutter's edge. */
+ const r=el.getBoundingClientRect(),vw=document.documentElement.getBoundingClientRect().width,vh=innerHeight;
+ const covers=el.open&&r.left<=.5&&r.top<=.5&&r.right>=vw-.5&&r.bottom>=vh-.5;
+ if(covers)document.documentElement.dataset.detailCovering='true';else uncover();
+}
 export default function DetailShell({children,onClose,origin,entryId,footer}:{children:ReactNode;onClose:()=>void;origin:HTMLElement|null;entryId:string;footer?:ReactNode}){
  const dialog=useRef<HTMLDialogElement>(null),body=useRef<HTMLDivElement>(null);
  const motion=useRef<Morph|null>(null),source=useRef<SourceGeometry|null>(null);
@@ -20,6 +34,8 @@ export default function DetailShell({children,onClose,origin,entryId,footer}:{ch
     reverses the close instead of restarting it, and Esc during a close is
     idempotent rather than ignored. */
  const drive=useCallback((open:boolean)=>{
+  // Before anything else, so the background is live for the close's first frame.
+  if(!open)uncover();
   desired.current=open;setClosing(!open);
   /* The destination geometry was measured when the detail opened. After the
      body scrolls, the title's layout box has moved but its keyframes have not,
@@ -45,7 +61,13 @@ export default function DetailShell({children,onClose,origin,entryId,footer}:{ch
   }
   const current=motion.current;
   if(!current){if(!open&&alive.current)finish.current();return}
-  void current.play(open).then(valid=>{if(valid&&alive.current&&!desired.current)finish.current()});
+  void current.play(open).then(valid=>{
+   if(!valid||!alive.current)return;
+   /* `valid` means this play was not superseded, so an open resolving here has
+      reached its final frame: the clip is the full dialog. */
+   if(desired.current){if(dialog.current)markCovering(dialog.current)}
+   else finish.current();
+  });
  },[]);
  useLayoutEffect(()=>{
   alive.current=true;desired.current=true;setClosing(false);
@@ -58,14 +80,22 @@ export default function DetailShell({children,onClose,origin,entryId,footer}:{ch
   root.style.overflow='hidden';document.body.style.overflow='hidden';
   el.showModal();
   motion.current=buildMorph(el,source.current);drive(true);
+  /* Rebuilding re-reads the source card and the whole dialog, so a burst of
+     resize events (a window drag, a mobile URL bar) rebuilds once per frame,
+     not once per event. Resize events are dispatched in the same rendering
+     step, just before rAF callbacks, so the rebuild still lands in that frame. */
+  let resizeFrame=0;
   const resize=()=>{
+   resizeFrame=0;
    const time=motion.current?.time()??0;
    motion.current?.cancel();source.current?.release();source.current=readSource(from.current);
    motion.current=buildMorph(el,source.current);motion.current.seek(time);drive(desired.current);
   };
-  window.addEventListener('resize',resize);
+  const onResize=()=>{if(!resizeFrame)resizeFrame=requestAnimationFrame(resize)};
+  window.addEventListener('resize',onResize,{passive:true});
   return()=>{
-   alive.current=false;window.removeEventListener('resize',resize);
+   alive.current=false;window.removeEventListener('resize',onResize);if(resizeFrame)cancelAnimationFrame(resizeFrame);
+   uncover();
    motion.current?.cancel();motion.current=null;
    source.current?.release();source.current=null;
    el.close();document.body.style.overflow=oldOverflow;root.style.overflow=oldRootOverflow;

@@ -1,5 +1,6 @@
 import {useRef,type PointerEvent} from 'react';
-export default function usePanelTilt(){
+import {PANEL_TILT_ENABLED} from '../features';
+function usePanelTiltLive(){
  const bounds=useRef<DOMRect|null>(null),strength=useRef(4);
  const reset=(event:PointerEvent<HTMLElement>)=>{bounds.current=null;event.currentTarget.style.removeProperty('--tilt-x');event.currentTarget.style.removeProperty('--tilt-y')};
  return {onPointerEnter:(event:PointerEvent<HTMLElement>)=>{bounds.current=event.currentTarget.getBoundingClientRect();strength.current=Number(getComputedStyle(event.currentTarget).getPropertyValue('--tilt-range'))||4},onPointerMove:(event:PointerEvent<HTMLElement>)=>{
@@ -11,3 +12,9 @@ export default function usePanelTilt(){
   event.currentTarget.style.setProperty('--tilt-y',`${x*range}deg`);
  },onPointerLeave:reset,onPointerCancel:reset};
 }
+type PanelTiltProps=Partial<ReturnType<typeof usePanelTiltLive>>;
+// Tilt off: nothing to spread, so the panel gets no pointer handlers at all.
+const NO_TILT:PanelTiltProps=Object.freeze({});
+function usePanelTiltOff():PanelTiltProps{return NO_TILT}
+const usePanelTilt:()=>PanelTiltProps=PANEL_TILT_ENABLED?usePanelTiltLive:usePanelTiltOff;
+export default usePanelTilt;

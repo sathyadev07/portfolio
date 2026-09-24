@@ -52,13 +52,17 @@ export default function PhoneControl(){
   };
   place();
   build();drive(desired.current);
+  // One rebuild per frame however many resize events arrive (see DetailShell).
+  let resizeFrame=0;
   const resize=()=>{
+   resizeFrame=0;
    if(motion.current!==owned)return;
    const time=owned?.time()??0;owned?.cancel();place();build();owned!.seek(time);drive(desired.current);
   };
   const escape=(event:KeyboardEvent)=>{if(event.key==='Escape'){event.preventDefault();event.stopPropagation();drive(false,true)}};
-  window.addEventListener('resize',resize);document.addEventListener('keydown',escape,true);
-  return()=>{owned?.cancel();if(motion.current===owned)motion.current=null;window.removeEventListener('resize',resize);document.removeEventListener('keydown',escape,true)};
+  const onResize=()=>{if(!resizeFrame)resizeFrame=requestAnimationFrame(resize)};
+  window.addEventListener('resize',onResize,{passive:true});document.addEventListener('keydown',escape,true);
+  return()=>{owned?.cancel();if(motion.current===owned)motion.current=null;window.removeEventListener('resize',onResize);if(resizeFrame)cancelAnimationFrame(resizeFrame);document.removeEventListener('keydown',escape,true)};
  },[mounted,drive]);
  async function copy(){try{await navigator.clipboard.writeText(COPY.phone);if(alive.current)setStatus('Number copied.')}catch{if(alive.current)setStatus(`Copy: ${COPY.phone}`)}}
  return <div className="phone-control" ref={root} onBlur={e=>{if(e.relatedTarget&&!e.currentTarget.contains(e.relatedTarget))drive(false)}}>

@@ -1,4 +1,5 @@
-﻿/* All effects share one clock, including their final-frame holds. */
+﻿import {PANEL_TILT_ENABLED} from '../../features';
+/* All effects share one clock, including their final-frame holds. */
 export const SPRING = 'linear(0.0000,0.0439,0.1424,0.2613,0.3813,0.4924,0.5901,0.6731,0.7420,0.7981,0.8431,0.8788,0.9069,0.9288,0.9458,0.9589,0.9689,0.9765,0.9824,0.9868,0.9901,0.9926,0.9945,0.9959,0.9970,0.9977,0.9983,0.9988,0.9991,0.9993,1.0000)';
 /* One duration for both directions, declared once in CSS so the page's other
    motion (phone menu, hover) and this module cannot drift apart. Read
@@ -89,9 +90,13 @@ const readMetrics=(el:HTMLElement):MorphMetrics=>{
 export function readSource(origin:HTMLElement|null):SourceGeometry|null {
   if(!origin?.isConnected)return null;
   const surface=(origin.closest('.panel-surface')??origin) as HTMLElement;
-  const style=getComputedStyle(surface),radius=style.borderRadius,transform=style.transform;
+  const style=getComputedStyle(surface),radius=style.borderRadius;
+  /* With tilt off a panel has no pose to freeze: skip the style writes, which
+     would otherwise force a style recalc before the rect read below. The rect
+     is then the flat layout box and every morph offset is measured from it. */
+  const tilted=PANEL_TILT_ENABLED&&surface.matches('.panel-surface,.panel-tilt');
+  const transform=tilted?style.transform:'';
   const savedTransform=surface.style.transform,savedTransition=surface.style.transition;
-  const tilted=surface.matches('.panel-surface,.panel-tilt');
   // Freeze the visible pose, including a currently running CSS transition.
   if(tilted){surface.style.transition='none';surface.style.transform=transform}
   const release=()=>{if(tilted){surface.style.removeProperty('--tilt-x');surface.style.removeProperty('--tilt-y');surface.style.transition=savedTransition;surface.style.transform=savedTransform}};

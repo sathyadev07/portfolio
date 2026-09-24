@@ -135,7 +135,11 @@ html{scrollbar-gutter:stable}
    32px desktop card size. */
 .portfolio-section h3.portfolio-display[data-morph="title"],.portfolio-detail-body h2.portfolio-display[data-morph="title"]{text-shadow:0 0 .5em var(--star-warm),0 0 1em var(--star-cool)}
 
-.panel-surface,.panel-tilt{transform:perspective(var(--tilt-perspective)) rotateX(var(--tilt-x,0deg)) rotateY(var(--tilt-y,0deg));transition:transform var(--motion-enter) ease-out}
+/* The tilt pose. Only while PANEL_TILT_ENABLED (src/features.ts) puts
+   data-panel-tilt on the root: at rest this is an identity 3D transform, and a
+   3D transform alone promotes every card to its own compositing layer. With
+   tilt off the panels carry no transform and render flat. */
+:root[data-panel-tilt] :is(.panel-surface,.panel-tilt){transform:perspective(var(--tilt-perspective)) rotateX(var(--tilt-x,0deg)) rotateY(var(--tilt-y,0deg));transition:transform var(--motion-enter) ease-out}
 @media(prefers-reduced-motion:reduce){.panel-surface{transform:none!important}}
 
 .model-credit{width:min(100% - 48px,1040px);margin:0 auto;padding:24px 0 40px;color:var(--ink-dim);font-size:16px;line-height:1.5}
