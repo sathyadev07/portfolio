@@ -53,6 +53,9 @@ body{margin:0;background:var(--entry-bg);color:var(--entry-fg)}
 </main>
 </div>
 <noscript><p class="entry-fallback">Enable JavaScript for the interactive portfolio. The resume and portfolio documents above remain available.</p></noscript>
+<!-- 3D rendering uses WebGPU with a WebGL2 fallback for the background and
+     WebGL for model viewers. GPU preference is requested in the renderers;
+     the browser retains final control over adapter selection and compositing. -->
 <script type="module" src="/src/main.tsx"></script>
 <!-- sameAs uses the existing LinkedIn profile from the portfolio content. -->
 <script type="application/ld+json">

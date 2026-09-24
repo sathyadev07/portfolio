@@ -214,7 +214,7 @@ export const PROJECTS = [
   {
     "id": "proj-06",
     "projNumber": "PROJ-04",
-    "title": "Smog Tower Feasibility & Simulation",
+    "title": "Smog Tower Simulation",
     "period": "Mar 2025",
     "subtitle": "Environmental Fluid Dynamics",
     "summary": "Evaluated large-scale environmental air cleaning towers for PM2.5/PM10 mitigation in Hong Kong under urban budgetary, airflow, and energetic constraints.",

@@ -46,7 +46,7 @@ export default function GalaxyCanvas({children, reducedMotion=false, background=
     <SceneBoundary>
       <Canvas camera={{position:[0,-10,4.5],fov:75,near:JOURNEY_NEAR,far:4200}}
         dpr={[1,compact ? 1.25 : 1.75]} frameloop={reducedMotion ? 'demand' : 'always'}
-        gl={{alpha:true,antialias:false,powerPreference:'low-power',toneMapping:NoToneMapping}}
+        gl={{alpha:true,antialias:false,powerPreference:'high-performance',toneMapping:NoToneMapping}}
         fallback={<p className="galaxy-status">3D is unavailable on this device. Portfolio navigation remains available.</p>}
         onCreated={({camera,gl}) => {
           camera.lookAt(0,0,0); gl.setClearColor('#000000',0);
