@@ -2,7 +2,14 @@ export const COPY = {
   "name": "SATHYA DEVARAJAN",
   "role": "// MECHANICAL DESIGN, STRUCTURES & DFM",
   "tagline": "",
-  "about": "Hello, I'm Sathya! My depth thus far is in mechanical design, structural analysis, and design-for-manufacturing. I've machined drivetrain components for Purdue Electric Racing (PER--Formula SAE Electric) and designed production tooling for rotorcraft at Sikorsky, and I love when I can design a part and take it all the way from structural mechanics and optimization to GD&T to CAM to machining to finished product. From medevac helicopters at Sikorsky to electric vehicles at PER, I'm building my first principles skills to genuinely help people and planet. With that said, enjoy your space odyssey!",
+  // THE single source for the About text, used by both the static page
+  // (index.html is regenerated from this by vite.config.ts on every dev/build)
+  // and Cool Mode. A blank line starts a new paragraph.
+  "about": `Hi, I'm Sathya! My expertise lies in mechanical design, structural analysis, and design-for-manufacturing (DFM).
+
+I’ve machined drivetrain components for Purdue Electric Racing (Formula SAE) and designed production tooling for rotorcraft at Sikorsky. I absolutely love the full lifecycle of hardware—taking a part all the way from first-principles structural mechanics and optimization, through GD&T and CAM, straight to the machining table and a finished product.
+
+From medevac helicopters to electric vehicles, I’m focused on building things that genuinely help people and the planet. With that said, enjoy peeking at my work!`,
   "contactHeading": "GET IN TOUCH",
   "contactBody": "",
   "email": "sathyadevarajan07@gmail.com",

@@ -346,7 +346,7 @@ html.cool-mode main.content-container { display: none; }
    matching the gap between the contact buttons. */
 html.cool-mode .site-header { display: none; }
 html.cool-mode .portfolio-topbar .header-actions { gap: var(--s2); }
-html.cool-mode #cool-stuff-toggle {
+html.cool-mode #mode-toggle-btn {
   flex: none;
   font: 500 15px/1 var(--font-body);
   padding: 0 var(--s4);
@@ -363,7 +363,7 @@ html.cool-mode #cool-stuff-toggle {
 .cool-status:empty { display: none; }
 
 /* No-JS: controls that need script stay out of the way */
-.no-js #cool-stuff-toggle { display: none; }
+.no-js #mode-toggle-btn { display: none; }
 
 /* ---------- Responsive ---------- */
 /* Name block left, all six actions in one row top-right, vertically centred. */

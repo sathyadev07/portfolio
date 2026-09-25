@@ -7,22 +7,25 @@ const html = document.documentElement;
 
 /* ---------- Phone copy ---------- */
 const phoneBtn = document.getElementById('copy-phone-btn');
-const phoneTip = document.getElementById('copy-phone-status');
+const phoneTip = document.getElementById('phone-feedback');
+const PHONE_TEL = 'tel:6308880715';
 let tipTimer = 0;
 
 function showTip(text) {
   phoneTip.textContent = text;
   clearTimeout(tipTimer);
-  tipTimer = setTimeout(() => { phoneTip.textContent = ''; }, 1800);
+  tipTimer = setTimeout(() => { phoneTip.textContent = ''; }, 1500);
 }
 
-phoneBtn?.addEventListener('click', (event) => {
-  if (!navigator.clipboard?.writeText) return; // let tel: handle it
-  event.preventDefault();
+// A real <button> (not a tel: anchor, which link sanitizers rewrite to
+// about:invalid). Copies the number; if the clipboard is unavailable or
+// permission is denied, falls back to dialling it.
+phoneBtn?.addEventListener('click', () => {
   const phone = phoneBtn.getAttribute('data-phone');
+  if (!navigator.clipboard?.writeText) { window.location.href = PHONE_TEL; return; }
   navigator.clipboard.writeText(phone).then(
     () => showTip(`Copied ${phone}`),
-    () => showTip(phone),
+    () => { window.location.href = PHONE_TEL; },
   );
 });
 
@@ -51,7 +54,7 @@ document.addEventListener('keydown', (event) => {
 });
 
 /* ---------- Cool Stuff Mode ---------- */
-const coolBtn = document.getElementById('cool-stuff-toggle');
+const coolBtn = document.getElementById('mode-toggle-btn');
 const coolLabel = coolBtn?.querySelector('.toggle-label');
 const container = document.getElementById('webgl-portal-container');
 const mainContent = document.getElementById('main-content');
@@ -126,10 +129,11 @@ async function enterCool() {
   if (!bundle) {
     loading = true;
     coolBtn.setAttribute('aria-busy', 'true');
+    coolBtn.disabled = true;
     setLabel('Loading…');
     status.textContent = 'Loading Cool Stuff Mode…';
     try {
-      bundle = await import('./cool-stuff-bundle.js');
+      bundle = await import('./cool-mode.js');
     } catch (error) {
       console.error(error);
       status.textContent = 'Cool Stuff Mode could not load. The portfolio is unaffected; try again.';
@@ -139,6 +143,7 @@ async function enterCool() {
     } finally {
       loading = false;
       coolBtn.removeAttribute('aria-busy');
+      coolBtn.disabled = false;
     }
     status.textContent = '';
   }

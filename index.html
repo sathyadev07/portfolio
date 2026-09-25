@@ -74,11 +74,11 @@
       <a href="./assets/Portfolio_Compressed.pdf" target="_blank" rel="noopener noreferrer" class="btn btn-pill">Portfolio PDF</a>
       <a href="mailto:sathyadevarajan07@gmail.com" class="btn btn-pill">Email</a>
       <a href="https://linkedin.com/in/sathya-devarajan" target="_blank" rel="noopener noreferrer" class="btn btn-pill">LinkedIn</a>
-      <span class="copy-wrap">
-        <a href="tel:6308880715" id="copy-phone-btn" class="btn btn-pill" data-phone="630-888-0715" aria-label="Phone: 630-888-0715, copy to clipboard" aria-describedby="copy-phone-status">Phone</a>
-        <span id="copy-phone-status" class="copy-tip" role="status" aria-live="polite"></span>
+      <span class="copy-wrap nav-item-phone">
+        <button type="button" id="copy-phone-btn" class="btn btn-pill nav-btn" data-phone="630-888-0715" aria-label="Copy phone number 630-888-0715 to clipboard" aria-describedby="phone-feedback">Phone</button>
+        <span id="phone-feedback" class="copy-tip" role="status" aria-live="polite"></span>
       </span>
-      <button id="cool-stuff-toggle" class="btn btn-accent" type="button" aria-pressed="false" aria-controls="webgl-portal-container">
+      <button id="mode-toggle-btn" class="btn btn-accent nav-btn mode-btn" type="button" aria-pressed="false" aria-controls="webgl-portal-container" aria-label="Toggle Cool Mode (interactive 3D portfolio)">
         <svg class="icon" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><circle cx="12" cy="12" r="2.5"/><ellipse cx="12" cy="12" rx="10" ry="4" transform="rotate(-20 12 12)"/></svg>
         <span class="toggle-label">Cool Mode</span>
       </button>
@@ -89,8 +89,11 @@
 <main id="main-content" class="content-container" tabindex="-1">
 
   <section class="intro" aria-label="About">
-    <p class="intro-text">Hello, I'm Sathya! My depth thus far is in mechanical design, structural analysis, and design-for-manufacturing. I've machined drivetrain components for Purdue Electric Racing (PER--Formula SAE Electric) and designed production tooling for rotorcraft at Sikorsky, and I love when I can design a part and take it all the way from structural mechanics and optimization to GD&amp;T to CAM to machining to finished product. From medevac helicopters at Sikorsky to electric vehicles at PER, I'm building my first principles skills to genuinely help people and planet.</p>
-    <p class="intro-text">With that said, enjoy peeking at my work!</p>
+    <!-- ABOUT:START — generated from COPY.about in src/data/portfolio.ts; edit it there, not here -->
+    <p class="intro-text">Hi, I'm Sathya! My expertise lies in mechanical design, structural analysis, and design-for-manufacturing (DFM).</p>
+    <p class="intro-text">I’ve machined drivetrain components for Purdue Electric Racing (Formula SAE) and designed production tooling for rotorcraft at Sikorsky. I absolutely love the full lifecycle of hardware—taking a part all the way from first-principles structural mechanics and optimization, through GD&amp;T and CAM, straight to the machining table and a finished product.</p>
+    <p class="intro-text">From medevac helicopters to electric vehicles, I’m focused on building things that genuinely help people and the planet. With that said, enjoy peeking at my work!</p>
+    <!-- ABOUT:END -->
   </section>
 
   <section id="experience" class="section" aria-labelledby="experience-title">
