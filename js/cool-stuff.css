@@ -1,0 +1,17 @@
+/* Display faces for the black-hole journey only. Loaded with the Cool Stuff
+   bundle, never by the static page. */
+@font-face {
+  font-family: 'Chillax';
+  src: url('/assets/fonts/Chillax-Medium.woff2') format('woff2');
+  font-weight: 400 700;
+  font-style: normal;
+  font-display: swap;
+  size-adjust: 111%;
+}
+@font-face {
+  font-family: 'Unbounded';
+  src: url('/assets/fonts/unbounded-semibold.woff2') format('woff2');
+  font-weight: 600;
+  font-style: normal;
+  font-display: swap;
+}

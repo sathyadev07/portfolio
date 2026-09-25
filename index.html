@@ -1,65 +1,372 @@
-<!doctype html>
-<html lang="en">
+<!DOCTYPE html>
+<html lang="en" class="no-js">
 <head>
-<meta charset="utf-8">
-<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
 <meta name="color-scheme" content="dark">
-<meta name="description" content="Mechanical engineering portfolio of Sathya Devarajan: rotorcraft production tooling, Formula SAE Electric drivetrain, hardware and simulation projects.">
-<title>Sathya Devarajan &#8212; Mechanical Engineering Portfolio</title>
-<!-- One placeholder, on purpose: the canonical host is not known here and an
-     invented domain is worse than a visible blank. Replace every
-     REPLACE-WITH-YOUR-DOMAIN in index.html, public/robots.txt and
-     public/sitemap.xml before the first deploy. See DEPLOY.md. -->
-<link rel="canonical" href="https://REPLACE-WITH-YOUR-DOMAIN/">
-<meta property="og:type" content="website">
+<meta name="theme-color" content="#030409">
+<title>Sathya Devarajan | Mechanical Design, Structures &amp; DFM</title>
+<meta name="description" content="Mechanical Design, Structures, FEA, and DFM Engineering Portfolio of Sathya Devarajan: rotorcraft production tooling at Sikorsky, Formula SAE Electric drivetrain, hardware and simulation projects.">
+<link rel="canonical" href="https://sathyadev07.github.io/portfolio/">
+<meta property="og:type" content="profile">
 <meta property="og:site_name" content="Sathya Devarajan">
-<meta property="og:title" content="Sathya Devarajan &#8212; Mechanical Engineering Portfolio">
-<meta property="og:description" content="Rotorcraft production tooling, Formula SAE Electric drivetrain, hardware and simulation projects.">
-<meta property="og:url" content="https://REPLACE-WITH-YOUR-DOMAIN/">
-<meta property="og:image" content="https://REPLACE-WITH-YOUR-DOMAIN/assets/og-cover.png">
+<meta property="og:title" content="Sathya Devarajan | Mechanical Design, Structures &amp; DFM">
+<meta property="og:description" content="Rotorcraft production tooling, Formula SAE Electric drivetrain, FEA and DFM engineering portfolio.">
+<meta property="og:url" content="https://sathyadev07.github.io/portfolio/">
+<meta property="og:image" content="https://sathyadev07.github.io/portfolio/assets/og-cover.png">
 <meta property="og:image:width" content="1200">
 <meta property="og:image:height" content="630">
 <meta property="og:image:alt" content="Sathya Devarajan, mechanical design, structures and DFM">
+<meta property="profile:first_name" content="Sathya">
+<meta property="profile:last_name" content="Devarajan">
 <meta name="twitter:card" content="summary_large_image">
-<meta name="twitter:title" content="Sathya Devarajan &#8212; Mechanical Engineering Portfolio">
-<meta name="twitter:description" content="Rotorcraft production tooling, Formula SAE Electric drivetrain, hardware and simulation projects.">
-<meta name="twitter:image" content="https://REPLACE-WITH-YOUR-DOMAIN/assets/og-cover.png">
-<meta name="twitter:image:alt" content="Sathya Devarajan, mechanical design, structures and DFM">
-<meta name="theme-color" content="#000000">
+<meta name="twitter:title" content="Sathya Devarajan | Mechanical Design, Structures &amp; DFM">
+<meta name="twitter:description" content="Rotorcraft production tooling, Formula SAE Electric drivetrain, FEA and DFM engineering portfolio.">
+<meta name="twitter:image" content="https://sathyadev07.github.io/portfolio/assets/og-cover.png">
 <link rel="icon" href="/favicon.svg" type="image/svg+xml">
 <link rel="icon" href="/favicon-32.png" sizes="32x32" type="image/png">
 <link rel="apple-touch-icon" href="/apple-touch-icon.png">
 <link rel="manifest" href="/site.webmanifest">
 <link rel="preload" href="/assets/fonts/Chillax-Medium.woff2" as="font" type="font/woff2" crossorigin>
-<link rel="preload" href="/assets/fonts/unbounded-semibold.woff2" as="font" type="font/woff2" crossorigin>
-<style>
-:root{color-scheme:dark;--entry-bg:#000000;--entry-fg:#f2f5fa;--entry-accent:#f5bf74}
-body{margin:0;background:var(--entry-bg);color:var(--entry-fg)}
-@font-face{font-family:'Chillax';src:url('/assets/fonts/Chillax-Medium.woff2') format('woff2');font-weight:400 700;font-style:normal;font-display:block;size-adjust:111%}
-@font-face{font-family:'Unbounded';src:url('/assets/fonts/unbounded-semibold.woff2') format('woff2');font-weight:600;font-style:normal;font-display:block}
-.entry-fallback{max-width:960px;margin:0 auto;padding:clamp(96px,15vh,160px) 24px;font-family:'Chillax',system-ui,sans-serif;line-height:1.6}
-.entry-fallback h1{font-family:'Unbounded','Chillax',system-ui,sans-serif;font-size:clamp(28px,5vw,56px);font-weight:600;line-height:1.15;overflow-wrap:break-word}
-.entry-fallback a{display:inline-flex;align-items:center;min-height:44px;margin-right:24px;color:var(--entry-accent)}
-.entry-fallback a:focus-visible{outline:2px solid var(--entry-accent);outline-offset:4px}
-</style>
-</head>
-<body>
-<div id="root" data-od-id="portfolio-app">
-<main class="entry-fallback" data-od-id="portfolio-loading">
-<p>MECHANICAL DESIGN, STRUCTURES &amp; DFM</p>
-<h1>SATHYA DEVARAJAN</h1>
-<p role="status">Loading the portfolio&#8230;</p>
-<nav aria-label="Portfolio documents"><a href="%BASE_URL%assets/Resume.pdf">Resume PDF</a><a href="%BASE_URL%assets/Portfolio_Compressed.pdf">Portfolio PDF</a></nav>
-</main>
-</div>
-<noscript><p class="entry-fallback">Enable JavaScript for the interactive portfolio. The resume and portfolio documents above remain available.</p></noscript>
-<!-- 3D rendering uses WebGPU with a WebGL2 fallback for the background and
-     WebGL for model viewers. GPU preference is requested in the renderers;
-     the browser retains final control over adapter selection and compositing. -->
-<script type="module" src="/src/main.tsx"></script>
-<!-- sameAs uses the existing LinkedIn profile from the portfolio content. -->
+<script>document.documentElement.classList.remove('no-js')</script>
+<link rel="stylesheet" href="./css/main.css">
 <script type="application/ld+json">
-{"@context":"https://schema.org","@type":"Person","name":"Sathya Devarajan","jobTitle":"Mechanical Engineer","description":"Mechanical design, structures and DFM. Rotorcraft production tooling, Formula SAE Electric drivetrain, hardware and simulation projects.","url":"https://REPLACE-WITH-YOUR-DOMAIN/","sameAs":["https://linkedin.com/in/sathya-devarajan"]}
+{
+  "@context": "https://schema.org",
+  "@graph": [
+    {
+      "@type": "Person",
+      "@id": "https://sathyadev07.github.io/portfolio/#person",
+      "name": "Sathya Devarajan",
+      "jobTitle": "Mechanical Engineer",
+      "description": "Mechanical design, structures and design-for-manufacturing. Rotorcraft production tooling, Formula SAE Electric drivetrain, hardware and simulation projects.",
+      "email": "mailto:sathyadevarajan07@gmail.com",
+      "telephone": "+1-630-888-0715",
+      "url": "https://sathyadev07.github.io/portfolio/",
+      "sameAs": ["https://linkedin.com/in/sathya-devarajan"],
+      "affiliation": [
+        {"@type": "Organization", "name": "Purdue Electric Racing"}
+      ],
+      "knowsAbout": ["Mechanical design", "Finite element analysis", "Design for manufacturing", "GD&T ASME Y14.5", "CATIA V5", "Siemens NX", "Ansys Mechanical", "CAM / CNC machining"]
+    },
+    {
+      "@type": "ProfilePage",
+      "@id": "https://sathyadev07.github.io/portfolio/#page",
+      "url": "https://sathyadev07.github.io/portfolio/",
+      "name": "Sathya Devarajan | Mechanical Design, Structures & DFM",
+      "mainEntity": {"@id": "https://sathyadev07.github.io/portfolio/#person"}
+    }
+  ]
+}
 </script>
+</head>
+<body class="static-mode">
+<a class="skip-link" href="#main-content">Skip to portfolio content</a>
+
+<header class="site-header">
+  <div class="header-inner">
+    <div class="header-left">
+      <h1 class="candidate-name">SATHYA DEVARAJAN</h1>
+      <p class="candidate-discipline">Mechanical Design, Structures &amp; DFM</p>
+    </div>
+    <nav class="header-actions" aria-label="Documents and contact">
+      <a href="./assets/Resume.pdf" target="_blank" rel="noopener noreferrer" class="btn btn-pill">Resume</a>
+      <a href="./assets/Portfolio_Compressed.pdf" target="_blank" rel="noopener noreferrer" class="btn btn-pill">Portfolio PDF</a>
+      <a href="mailto:sathyadevarajan07@gmail.com" class="btn btn-pill">Email</a>
+      <a href="https://linkedin.com/in/sathya-devarajan" target="_blank" rel="noopener noreferrer" class="btn btn-pill">LinkedIn</a>
+      <span class="copy-wrap">
+        <a href="tel:6308880715" id="copy-phone-btn" class="btn btn-pill" data-phone="630-888-0715" aria-label="Phone: 630-888-0715, copy to clipboard" aria-describedby="copy-phone-status">Phone</a>
+        <span id="copy-phone-status" class="copy-tip" role="status" aria-live="polite"></span>
+      </span>
+      <button id="cool-stuff-toggle" class="btn btn-accent" type="button" aria-pressed="false" aria-controls="webgl-portal-container">
+        <svg class="icon" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><circle cx="12" cy="12" r="2.5"/><ellipse cx="12" cy="12" rx="10" ry="4" transform="rotate(-20 12 12)"/></svg>
+        <span class="toggle-label">Cool Mode</span>
+      </button>
+    </nav>
+  </div>
+</header>
+
+<main id="main-content" class="content-container" tabindex="-1">
+
+  <section class="intro" aria-label="About">
+    <p class="intro-text">Hello, I'm Sathya! My depth thus far is in mechanical design, structural analysis, and design-for-manufacturing. I've machined drivetrain components for Purdue Electric Racing (PER--Formula SAE Electric) and designed production tooling for rotorcraft at Sikorsky, and I love when I can design a part and take it all the way from structural mechanics and optimization to GD&amp;T to CAM to machining to finished product. From medevac helicopters at Sikorsky to electric vehicles at PER, I'm building my first principles skills to genuinely help people and planet.</p>
+    <p class="intro-text">With that said, enjoy peeking at my work!</p>
+  </section>
+
+  <section id="experience" class="section" aria-labelledby="experience-title">
+    <h2 id="experience-title" class="section-title">Experience</h2>
+    <div class="card-grid">
+
+      <article class="card">
+        <div class="card-head">
+          <img class="card-logo" src="assets/logos/sikorsky-208.webp" width="208" height="208" alt="Sikorsky, a Lockheed Martin company" decoding="async">
+          <div class="card-head-text">
+            <p class="card-kicker">Lockheed Martin Sikorsky</p>
+            <p class="card-period">Jun 2026 – Aug 2026</p>
+          </div>
+        </div>
+        <h3 class="card-title"><a class="card-link" href="#detail-sikorsky">Tooling Design Intern</a></h3>
+        <figure class="card-media"><img src="assets/images/Sikorsky-Blackhawk.jpg" width="1024" height="683" alt="Sikorsky Black Hawk helicopter in flight" decoding="async"></figure>
+        <ul class="tag-list" aria-label="Skills"><li>CATIA V5</li><li>3DEXPERIENCE</li><li>SAP ERP</li></ul>
+      </article>
+
+      <article class="card">
+        <div class="card-head">
+          <img class="card-logo" src="assets/logos/purdue-electric-racing.png" width="200" height="200" alt="Purdue Electric Racing" decoding="async">
+          <div class="card-head-text">
+            <p class="card-kicker">Formula SAE Electric</p>
+            <p class="card-period">Aug 2025 – Present</p>
+          </div>
+        </div>
+        <h3 class="card-title"><a class="card-link" href="#detail-fsae">Drivetrain Engineer</a></h3>
+        <figure class="card-media"><img src="assets/images/rear-upright.png" width="532" height="754" alt="2027 rear wheel upright" decoding="async"></figure>
+        <ul class="tag-list" aria-label="Skills"><li>Siemens NX</li><li>Ansys FEA</li><li>5-Axis CNC</li></ul>
+      </article>
+
+    </div>
+  </section>
+
+  <section id="projects" class="section" aria-labelledby="projects-title">
+    <h2 id="projects-title" class="section-title">Projects</h2>
+    <div class="card-grid">
+
+      <article class="card">
+        <div class="card-head-text">
+          <p class="card-kicker">PROJ-01 · Parametric Frame &amp; FEA</p>
+          <p class="card-period">Oct 2025 – Present</p>
+        </div>
+        <h3 class="card-title"><a class="card-link" href="#detail-proj-01">Custom Electric Bike Design</a></h3>
+        <figure class="card-media"><img src="assets/images/bike-01-frame-assembly.jpg" width="1425" height="983" alt="Parametric electric bike frame assembly in Siemens NX" loading="lazy" decoding="async"></figure>
+        <ul class="tag-list" aria-label="Skills"><li>Siemens NX</li><li>Ansys FEA</li><li>Parametric CAD</li></ul>
+      </article>
+
+      <article class="card">
+        <div class="card-head-text">
+          <p class="card-kicker">PROJ-02 · 3-Axis CAM Optimization</p>
+          <p class="card-period">Dec 2025 – Jan 2026</p>
+        </div>
+        <h3 class="card-title"><a class="card-link" href="#detail-proj-03">Surface Topography</a></h3>
+        <figure class="card-media"><img src="assets/images/topo-07-final.jpg" width="1800" height="1355" alt="Finished machined wood relief portrait" loading="lazy" decoding="async"></figure>
+        <ul class="tag-list" aria-label="Skills"><li>Fusion 360</li><li>CAM / CNC</li></ul>
+      </article>
+
+      <article class="card">
+        <div class="card-head-text">
+          <p class="card-kicker">PROJ-03 · Active Filter Hardware</p>
+          <p class="card-period">Apr 2026</p>
+        </div>
+        <h3 class="card-title"><a class="card-link" href="#detail-proj-04">Analog Audio Equalizer</a></h3>
+        <figure class="card-media"><img src="assets/images/audio-eq-schematic.png" width="1342" height="880" alt="Schematic of the multi-stage analog equalizer and amplifier" loading="lazy" decoding="async"></figure>
+        <ul class="tag-list" aria-label="Skills"><li>LTSpice</li><li>Breadboarding</li><li>Analog Circuits</li></ul>
+      </article>
+
+      <article class="card">
+        <div class="card-head-text">
+          <p class="card-kicker">PROJ-04 · Environmental Fluid Dynamics</p>
+          <p class="card-period">Mar 2025</p>
+        </div>
+        <h3 class="card-title"><a class="card-link" href="#detail-proj-06">Smog Tower Simulation</a></h3>
+        <figure class="card-media"><img src="assets/images/smog-trajectories-concentration.png" width="938" height="561" alt="Simulated particle trajectories and PM concentration graph around a smog tower" loading="lazy" decoding="async"></figure>
+        <ul class="tag-list" aria-label="Skills"><li>Python</li><li>Particle Simulation</li><li>Trade Study</li></ul>
+      </article>
+
+    </div>
+  </section>
+
+  <!-- Detail views: rendered statically, revealed by :target -->
+
+  <section id="detail-sikorsky" class="project-detail-view" aria-labelledby="detail-sikorsky-title" tabindex="-1">
+    <div class="detail-inner">
+      <div class="detail-header">
+        <a href="#experience" class="btn btn-pill back-btn">&larr; Back to Experience</a>
+        <p class="detail-eyebrow">Lockheed Martin Sikorsky · Jun 2026 – Aug 2026</p>
+        <h2 id="detail-sikorsky-title">Tooling Design Intern</h2>
+      </div>
+      <div class="detail-body">
+        <dl class="detail-stats">
+          <div><dt>Tools designed</dt><dd>14</dd></div>
+          <div><dt>In production use</dt><dd>3</dd></div>
+          <div><dt>ASME Y14.5 tools</dt><dd>12</dd></div>
+          <div><dt>Root-cause redesigns</dt><dd>3</dd></div>
+        </dl>
+        <div class="detail-metadata">
+          <p><strong>Tools:</strong> CATIA V5, 3DEXPERIENCE PLM, SAP ERP</p>
+          <p><strong>Programs:</strong> CH-53K, Black Hawk, search-and-rescue rotorcraft, Nomad VTOL</p>
+          <p><strong>Standards:</strong> ASME Y14.5 GD&amp;T</p>
+        </div>
+        <ul class="detail-text">
+          <li>Designed &amp; revised 14 production tooling fixtures &amp; jigs (drill jigs, assembly locators, masking fixtures) in CATIA V5 for CH-53K, Black Hawk, &amp; search-and-rescue rotorcraft; 3 now in use on shop floor; 11 in procurement &amp; manufacturing.</li>
+          <li>Toleranced 12 tools to ASME Y14.5 GD&amp;T, defining datum reference frames and profile/position callouts (&plusmn;0.001 in. to &plusmn;0.015 in.) matched to CNC milling, manual machining, and additive processes.</li>
+          <li>Traced kinematic underconstraint and lack of sealing in 3 released production tools back to root cause; redesigned geometry to eliminate secondary mill setups and reduce vendor procurement lead time by 2 weeks.</li>
+          <li>Maintained multi-level BOMs for all 14 tools &amp; routed engineering change orders through SAP ERP &amp; 3DEXPERIENCE PLM, so manufacturing engineers &amp; machinists worked from current tooling data across releases.</li>
+          <li>Led mechanical design on hybrid propulsion system intern project for rotor-blown Nomad VTOL; packaged ICE, motor generator, battery pack, &amp; a dual motor &amp; planetary gearbox 20% under 80 lb weight limits; presented to leadership.</li>
+        </ul>
+      </div>
+    </div>
+  </section>
+
+  <section id="detail-fsae" class="project-detail-view" aria-labelledby="detail-fsae-title" tabindex="-1">
+    <div class="detail-inner">
+      <div class="detail-header">
+        <a href="#experience" class="btn btn-pill back-btn">&larr; Back to Experience</a>
+        <p class="detail-eyebrow">Purdue Electric Racing, Formula SAE Electric · Aug 2025 – Present</p>
+        <h2 id="detail-fsae-title">Drivetrain Engineer</h2>
+      </div>
+      <div class="detail-body">
+        <dl class="detail-stats">
+          <div><dt>Machining time cut</dt><dd>50%</dd></div>
+          <div><dt>Weight reduction</dt><dd>32%</dd></div>
+          <div><dt>Bearing tolerance</dt><dd>0.001 in.</dd></div>
+        </dl>
+        <div class="detail-metadata">
+          <p><strong>Tools:</strong> Siemens NX, Ansys Mechanical FEA, 5-axis CNC milling</p>
+          <p><strong>Validation:</strong> Max cornering, acceleration and combined tire contact patch load cases; mesh convergence studies; bearing bore tolerance verification</p>
+          <p><strong>Material:</strong> 7075-T6 aluminum</p>
+        </div>
+        <ul class="detail-text">
+          <li>Executed static structural FEA on the rear upright &amp; hub group targeting SF 1.5; optimized rib topology &amp; fillet radii against localized stress concentrations to reduce suspension bracket compliance from 0.079 in. to under 0.02 in.</li>
+          <li>Ran static structural FEA on the rear upright and hub group, then reworked stiffener and fillet geometry against the stress peaks and 2 mm deflections it exposed, and pulled dead weight out of near-zero-stress areas.</li>
+          <li>Resolved stress propagation issues in Ansys via strain-energy study &amp; first principles calculation; identified bonded contacts as an issue &amp; switched to frictionless contacts on specific interfaces for correct stress propagation &amp; deformation.</li>
+          <li>Ran mesh convergence studies to produce highest fidelity results on max cornering, accel, &amp; combined tire contact patch cases to verify previous studies and geometry modifications.</li>
+          <li>Enhanced lumped-parameter battery thermal model accuracy by calculating effective thermal conductivities from empirical literature &amp; test datasets, replacing uniform isotropic cell assumptions to increase thermal simulation fidelity.</li>
+          <li>Detailed 2D production drawings for rear upright assemblies, applying ISO P7 interference limits &amp; ISO H8 transition fit on 3.937 in. &amp; 4.528 in. nominal bearing seats (&minus;0.0009 in. / &minus;0.0022 in. &amp; +0.002 in. / 0 in.) to maintain a press fit for SKF 61818 bearings across operating thermal ranges in 7075-T6 aluminum.</li>
+        </ul>
+        <div class="detail-media-grid">
+          <figure><img src="assets/images/rear-upright.png" width="532" height="754" alt="2027 rear wheel upright" loading="lazy" decoding="async"><figcaption>2027 rear wheel upright</figcaption></figure>
+          <figure><img src="assets/images/upright-wheel-cad-01.jpg" width="1192" height="1075" alt="CAD render of the 2027 rear wheel drivetrain assembly" loading="lazy" decoding="async"><figcaption>2027 rear wheel drivetrain assembly</figcaption></figure>
+          <figure><img src="assets/images/upright-fea.jpg" width="1050" height="826" alt="Ansys deformation contour on the rear upright and hub group" loading="lazy" decoding="async"><figcaption>Static structural FEA deformation, rear upright &amp; hub group</figcaption></figure>
+          <figure><img src="assets/images/upright-cam-01-roughing.jpg" width="1047" height="765" alt="CAM roughing toolpath setup on the upright stock" loading="lazy" decoding="async"><figcaption>CAM roughing setup for the upright</figcaption></figure>
+          <figure><img src="assets/images/upright-5axis-machined.jpg" width="1800" height="1355" alt="Machined aluminum rear upright after 5-axis milling" loading="lazy" decoding="async"><figcaption>Upright after 5-axis machining</figcaption></figure>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section id="detail-proj-01" class="project-detail-view" aria-labelledby="detail-proj-01-title" tabindex="-1">
+    <div class="detail-inner">
+      <div class="detail-header">
+        <a href="#projects" class="btn btn-pill back-btn">&larr; Back to Projects</a>
+        <p class="detail-eyebrow">PROJ-01 · Parametric Frame &amp; FEA · Oct 2025 – Present</p>
+        <h2 id="detail-proj-01-title">Custom Electric Bike Design</h2>
+      </div>
+      <div class="detail-body">
+        <dl class="detail-stats">
+          <div><dt>Safety factor</dt><dd>2.0</dd></div>
+          <div><dt>Cost vs. first build</dt><dd>&minus;9%</dd></div>
+        </dl>
+        <div class="detail-metadata">
+          <p><strong>Tools:</strong> Siemens NX, Ansys FEA, parametric CAD</p>
+          <p><strong>Validation:</strong> Static load FEA, minimum safety factor 2.0</p>
+        </div>
+        <ul class="detail-text">
+          <li>Built a fully parametric frame assembly in Siemens NX keyed to off-the-shelf tubing dimensions, so wheelbase, head angle, chainstay angle, and dropout geometry all update from a single set of driving inputs.</li>
+          <li>Ran Ansys FEA on each candidate frame, swapping stock tube diameters and wall thicknesses through the parametric model to find the lightest combination that holds a 2.0 minimum safety factor under static load.</li>
+          <li>Ran cost-versus-performance trade studies on motors, sprockets, and tubing alongside the FEA, converging on the cheapest catalog set that still meets the target safety factor and ride geometry, 9% under the first build cost.</li>
+        </ul>
+        <div class="detail-media-grid">
+          <figure><img src="assets/images/bike-01-frame-assembly.jpg" width="1425" height="983" alt="Parametric electric bike frame assembly in Siemens NX" loading="lazy" decoding="async"><figcaption>Parametric electric bike frame assembly</figcaption></figure>
+          <figure><img src="assets/images/bike-02-fea-prepped.jpg" width="897" height="417" alt="Bike frame meshed and constrained for FEA" loading="lazy" decoding="async"><figcaption>Frame model prepared for FEA</figcaption></figure>
+          <figure><img src="assets/images/bike-03-fea-stress.jpg" width="897" height="417" alt="Stress contour across the bike frame under static load" loading="lazy" decoding="async"><figcaption>Stress distribution across the frame under static load</figcaption></figure>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section id="detail-proj-03" class="project-detail-view" aria-labelledby="detail-proj-03-title" tabindex="-1">
+    <div class="detail-inner">
+      <div class="detail-header">
+        <a href="#projects" class="btn btn-pill back-btn">&larr; Back to Projects</a>
+        <p class="detail-eyebrow">PROJ-02 · 3-Axis CAM Optimization · Dec 2025 – Jan 2026</p>
+        <h2 id="detail-proj-03-title">Surface Topography</h2>
+      </div>
+      <div class="detail-body">
+        <dl class="detail-stats">
+          <div><dt>Cycle time reduction</dt><dd>60%</dd></div>
+        </dl>
+        <div class="detail-metadata">
+          <p><strong>Tools:</strong> Fusion 360, 3-axis CAM, CNC router</p>
+        </div>
+        <ul class="detail-text">
+          <li>Produced a 2D grayscale gradient heightmap from a source portrait photo.</li>
+          <li>Built 3D mesh geometry from the heightmap in Fusion 360, keeping the organic topology machinable.</li>
+          <li>Cut machining time 60% by reworking CAM toolpaths, holding surface detail with almost no hand rework.</li>
+        </ul>
+        <div class="detail-media-grid">
+          <figure><img src="assets/images/topo-01-source.jpg" width="275" height="183" alt="Source portrait photograph" loading="lazy" decoding="async"><figcaption>Source portrait</figcaption></figure>
+          <figure><img src="assets/images/topo-02-heightmap.jpg" width="1400" height="939" alt="Grayscale heightmap derived from the portrait" loading="lazy" decoding="async"><figcaption>Grayscale heightmap derived from source image</figcaption></figure>
+          <figure><img src="assets/images/topo-03-mesh-toolpath.jpg" width="1390" height="851" alt="Relief mesh with generated CAM toolpaths" loading="lazy" decoding="async"><figcaption>Mesh with generated CAM toolpaths</figcaption></figure>
+          <figure><img src="assets/images/topo-05-stockprep.jpg" width="1800" height="1350" alt="Wood stock prepared on the router bed" loading="lazy" decoding="async"><figcaption>Stock preparation before machining</figcaption></figure>
+          <figure><img src="assets/images/topo-06-router.jpg" width="1600" height="1205" alt="Router gantry machining the relief" loading="lazy" decoding="async"><figcaption>Machining the relief on the router gantry</figcaption></figure>
+          <figure><img src="assets/images/topo-07-final.jpg" width="1800" height="1355" alt="Finished machined wood relief portrait" loading="lazy" decoding="async"><figcaption>Finished machined relief</figcaption></figure>
+          <figure><video src="assets/video/topo-video-1.mp4" controls preload="none" playsinline></video><figcaption>Machining pass 01</figcaption></figure>
+          <figure><video src="assets/video/topo-video-2.mp4" controls preload="none" playsinline></video><figcaption>Machining pass 02</figcaption></figure>
+          <figure><video src="assets/video/topo-video-3.mp4" controls preload="none" playsinline></video><figcaption>Machining pass 03</figcaption></figure>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section id="detail-proj-04" class="project-detail-view" aria-labelledby="detail-proj-04-title" tabindex="-1">
+    <div class="detail-inner">
+      <div class="detail-header">
+        <a href="#projects" class="btn btn-pill back-btn">&larr; Back to Projects</a>
+        <p class="detail-eyebrow">PROJ-03 · Active Filter Hardware · Apr 2026</p>
+        <h2 id="detail-proj-04-title">Analog Audio Equalizer</h2>
+      </div>
+      <div class="detail-body">
+        <dl class="detail-stats">
+          <div><dt>Architecture</dt><dd>Active filter</dd></div>
+          <div><dt>Gain range</dt><dd>&plusmn;12 dB</dd></div>
+          <div><dt>Signal-to-noise</dt><dd>&gt; 98 dB</dd></div>
+        </dl>
+        <div class="detail-metadata">
+          <p><strong>Tools:</strong> LTSpice, breadboarding, frequency generator, oscilloscope, multimeter</p>
+          <p><strong>Band splitting:</strong> Low (120 Hz), Mid (1 kHz), High (8 kHz)</p>
+          <p><strong>Gain range:</strong> &plusmn;12 dB per octave shelving</p>
+          <p><strong>Signal-to-noise:</strong> &gt; 98 dB A-weighted</p>
+        </div>
+        <ul class="detail-text">
+          <li>Designed schematic for an audio equalizer and amplifier to recombine adjusted treble, mid, and bass frequencies for customizable output.</li>
+          <li>Troubleshot and validated breadboard circuit assembly via frequency generator, oscilloscope, and multimeter.</li>
+        </ul>
+        <div class="detail-media-grid">
+          <figure class="figure-wide"><img src="assets/images/audio-eq-schematic.png" width="1342" height="880" alt="Schematic of the multi-stage analog equalizer and amplifier" loading="lazy" decoding="async"><figcaption>Multi-stage analog equalizer schematic</figcaption></figure>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section id="detail-proj-06" class="project-detail-view" aria-labelledby="detail-proj-06-title" tabindex="-1">
+    <div class="detail-inner">
+      <div class="detail-header">
+        <a href="#projects" class="btn btn-pill back-btn">&larr; Back to Projects</a>
+        <p class="detail-eyebrow">PROJ-04 · Environmental Fluid Dynamics · Mar 2025</p>
+        <h2 id="detail-proj-06-title">Smog Tower Simulation</h2>
+      </div>
+      <div class="detail-body">
+        <dl class="detail-stats">
+          <div><dt>Study outcome</dt><dd>Trade study</dd></div>
+        </dl>
+        <div class="detail-metadata">
+          <p><strong>Tools:</strong> Python particle simulation, feasibility trade study</p>
+          <p><strong>Scope:</strong> PM2.5/PM10 mitigation, Hong Kong</p>
+        </div>
+        <ul class="detail-text">
+          <li>Researched Studio Roosegaarde's Smog Free Tower concept and evaluated its feasibility for large-scale deployment to reduce PM2.5/PM10 air pollution in Hong Kong within realistic budget and practicality constraints.</li>
+          <li>Built a low-fidelity Python simulation modeling individual particle motion to determine each tower's effective cleaning radius: the area where PM2.5/PM10 concentrations could be held at or below global health standards.</li>
+          <li>Combined the simulation results with a scale-deployment feasibility analysis to conclude that city-wide deployment wasn't practical: a data-driven recommendation rather than a subjective call.</li>
+        </ul>
+        <div class="detail-media-grid">
+          <figure class="figure-wide"><img src="assets/images/smog-trajectories-concentration.png" width="938" height="561" alt="Simulated particle trajectories and PM concentration graph around a smog tower" loading="lazy" decoding="async"><figcaption>Smog trajectories and concentration graph</figcaption></figure>
+        </div>
+      </div>
+    </div>
+  </section>
+</main>
+
+<!-- Container for the on-demand 3D canvas; stays empty until Cool Stuff Mode is requested -->
+<div id="webgl-portal-container" class="hidden" aria-hidden="true"></div>
+
+<script type="module" src="./js/static-core.js"></script>
 </body>
 </html>

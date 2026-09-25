@@ -1,0 +1,19 @@
+{
+  "version": 1,
+  "kind": "html",
+  "title": "public/404.html",
+  "entry": "public/404.html",
+  "renderer": "html",
+  "status": "complete",
+  "exports": [
+    "html",
+    "pdf",
+    "zip"
+  ],
+  "createdAt": "2026-09-25T01:54:51.299Z",
+  "updatedAt": "2026-09-25T01:54:51.299Z",
+  "metadata": {
+    "inferred": true,
+    "reconciled": true
+  }
+}
