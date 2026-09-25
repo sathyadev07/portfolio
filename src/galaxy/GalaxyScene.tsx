@@ -1,7 +1,6 @@
 import {useMemo,useRef} from 'react';
 import {Object3D,type Group} from 'three';
 import GalaxyCanvas,{useMediaQuery} from './GalaxyCanvas';
-import BlackHole from './BlackHole';
 import CameraRig from './CameraRig';
 import useJourney from './useJourney';
 import useJourneyInput from './useJourneyInput';
@@ -43,7 +42,6 @@ export default function GalaxyScene({paused,onOpenDetail,onExit}:{paused:boolean
  return <div className="galaxy-mode">
   <GalaxyCanvas reducedMotion={false}>
    <group ref={frame}>
-    <BlackHole reducedMotion={reduced}/>
     {anchors.map((object,index)=><primitive key={ANCHORS[index].id} object={object}/>)}
    </group>
    <CameraRig journey={journey.state} reduced={reduced} frame={frame}/>

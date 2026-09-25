@@ -1,8 +1,0 @@
-Black Hole by NestaEric
-Source: https://sketchfab.com/3d-models/black-hole-e410da98b1e5445eae2acafaaa53587d
-Creator: https://sketchfab.com/Nestaeric
-License: CC BY 4.0 — https://creativecommons.org/licenses/by/4.0/
-
-The supplied model's specular/glossiness materials were converted to the
-current glTF metal/rough workflow. Its textures remain KTX2 encoded and its
-mesh geometry remains Draco compressed in this distribution.
