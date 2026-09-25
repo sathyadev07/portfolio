@@ -1,7 +1,7 @@
 import {defineConfig,type Plugin} from 'vite';
 import react from '@vitejs/plugin-react';
 import tailwindcss from '@tailwindcss/vite';
-import {readFileSync,writeFileSync} from 'node:fs';
+import {readFileSync,writeFileSync,cpSync} from 'node:fs';
 import {resolve} from 'node:path';
 import {COPY} from './src/data/portfolio';
 
@@ -29,4 +29,18 @@ function aboutSync():Plugin{
  };
 }
 
-export default defineConfig({base:'./',plugins:[aboutSync(),react(),tailwindcss()],build:{outDir:'dist',assetsDir:'bundled'}});
+/* assets/ (PDFs, images, models, fonts, video, decoders) is the single copy of
+   every site asset. Dev serves it straight from the project root; the build
+   copies it to dist/assets so runtime paths like ./assets/Resume.pdf and the
+   Cool Mode app's asset('assets/…') URLs resolve on GitHub Pages. */
+function copyAssets():Plugin{
+ let root=process.cwd(),outDir='dist';
+ return {
+  name:'copy-assets',
+  apply:'build',
+  configResolved(config){root=config.root;outDir=resolve(config.root,config.build.outDir)},
+  closeBundle(){cpSync(resolve(root,'assets'),resolve(outDir,'assets'),{recursive:true,filter:src=>!/\.(md|zip)$/i.test(src)})},
+ };
+}
+
+export default defineConfig({base:'./',plugins:[aboutSync(),copyAssets(),react(),tailwindcss()],build:{outDir:'dist',assetsDir:'bundled'}});
