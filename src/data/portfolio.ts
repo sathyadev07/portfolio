@@ -2,14 +2,15 @@ export const COPY = {
   "name": "SATHYA DEVARAJAN",
   "role": "// MECHANICAL DESIGN, STRUCTURES & DFM",
   "tagline": "",
-  // THE single source for the About text, used by both the static page
-  // (index.html is regenerated from this by vite.config.ts on every dev/build)
-  // and Cool Mode. A blank line starts a new paragraph.
-  "about": `Hi, I'm Sathya! My expertise lies in mechanical design, structural analysis, and design-for-manufacturing (DFM).
-
-I’ve machined drivetrain components for Purdue Electric Racing (Formula SAE) and designed production tooling for rotorcraft at Sikorsky. I absolutely love the full lifecycle of hardware—taking a part all the way from first-principles structural mechanics and optimization, through GD&T and CAM, straight to the machining table and a finished product.
-
-From medevac helicopters to electric vehicles, I’m focused on building things that genuinely help people and the planet. With that said, enjoy peeking at my work!`,
+  "about": "Hi, I'm Sathya! My expertise lies in mechanical design," +
+  "structural analysis, and design-for-manufacturing (DFM).\n\nI’ve machined " +
+  "drivetrain components for Purdue Electric Racing (Formula SAE) and designed "+
+  "production tooling for rotorcraft at Sikorsky. I absolutely love the "+
+  "full lifecycle of hardware—taking a part all the way from first-principles "+
+  "structural mechanics and optimization, through GD&T and CAM, straight to "+
+  "the machining table and a finished product. \n\nFrom medevac helicopters to electric" +
+  "vehicles, I’m focused on building things that genuinely help people and the planet." +
+  "With that said, enjoy peeking at my work!",
   "contactHeading": "GET IN TOUCH",
   "contactBody": "",
   "email": "sathyadevarajan07@gmail.com",
@@ -191,8 +192,9 @@ export const PROJECTS = [
     "subtitle": "Active Filter Hardware",
     "summary": "Multi-stage analog active filter and amplifier circuitry designed to split, isolate, adjust, and recombine treble, mid, and bass frequency bands for custom audio curves.",
     "bullets": [
-      "Designed schematic for an audio equalizer and amplifier to recombine adjusted treble, mid, and bass frequencies for customizable output.",
-      "Troubleshot and validated breadboard circuit assembly via frequency generator, oscilloscope, and multimeter."
+      "Designed a multi-band active audio equalizer using combined passive filters, isolation amplifiers, and summing & power amplifiers, achieving gain adjustments from 10-320 Hz, 320-3200 Hz, and 3200-100 kHz within 10% tolerance.",
+      "Modeled filter frequency response in LTSpice, tuning individual low, high, and band-pass to produce combined signal with max ripple under RMS 15 mV while outputting 400 mW of power.",
+      "Built prototype breadboard; validated frequency response, power outputs, and signal ripple across a 10 Hz - 100 kHz spectrum via bench oscilloscope and signal generator testing.",
     ],
     "tags": [
       "LTSpice",
@@ -244,6 +246,10 @@ export const PROJECTS = [
 
 export const GALLERIES = {
   "fsae": [
+    [
+      "rear-upright.png",
+      "2027 rear wheel upright"
+    ],
     [
       "upright-wheel-cad-01.jpg",
       "2027 rear wheel drivetrain assembly"
@@ -305,6 +311,12 @@ export const GALLERIES = {
     [
       "audio-eq-schematic.png",
       "Multi-stage analog equalizer schematic"
+    ]
+  ],
+  "proj-06": [
+    [
+      "smog-trajectories-concentration.png",
+      "Smog trajectories and concentration graph"
     ]
   ]
 };
@@ -397,6 +409,14 @@ export const MEDIA = {
   "audio-eq-schematic.png": {
     "height": 880,
     "width": 1342
+  },
+  "rear-upright.png": {
+    "height": 754,
+    "width": 532
+  },
+  "smog-trajectories-concentration.png": {
+    "height": 561,
+    "width": 938
   }
 };
 
